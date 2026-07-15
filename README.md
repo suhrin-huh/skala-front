@@ -1,26 +1,6 @@
 # SKALA-FRONT
 SKALA 프론트엔드 프로젝트
 
-## 브랜치 전략
-
-이 저장소는 아래 규칙에 따라 브랜치를 생성합니다.
-
-```
-{type}/p{페이지번호}-{날짜(mmdd)}
-```
-
-| 구분 | 접두사 | 예시 |
-|:---:|:---:|---|
-| 실습 | `practice` | `practice/p12-0715` |
-| 과제 | `assignment` | `assignment/p24-0715` |
-
-```bash
-practice/p12-0715      # 실습, 12페이지, 7월 15일 작업
-assignment/p24-0715    # 과제, 24페이지, 7월 15일 작업
-```
-
----
-
 ## 📂 과제 목록
 
 ### HTML, CSS, JavaScript
