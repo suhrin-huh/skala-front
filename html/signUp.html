@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+<body>
+
+    <header>
+        <h1>👤 회원가입</h1>
+        <p>SKALA-FRONT 회원가입을 환영합니다.</p>
+    </header>
+    <main>
+        <form id="signUpForm" action="signUpResult.html" method="get">
+            <fieldset>
+                <legend>🔐 계정 정보</legend>
+                <label for="userId">아이디:</label>
+                <input type="text" id="userId" name="userId" placeholder="4-16자 영문/숫자" minlength="4" maxlength="16" required>
+                <span>(필수)</span>
+                <br><br>
+                <label for="userPw">비밀번호:</label>
+                <input type="password" id="userPw" name="userPw" placeholder="8자 이상 입력" minlength="8" required>
+                <span>(필수)</span>
+                <br><br>
+                <label for="userEmail">이메일:</label>
+                <input type="text" id="userEmail" name="userEmail" placeholder="example" required>
+                @
+                <select id="emailDomain" name="emailDomain">
+                    <option value="direct">직접 입력</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="daum.net">daum.net</option>
+                </select>
+                <span>(필수)</span>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>🙋 개인 프로필 정보</legend>
+                <label for="userName">이름:</label>
+                <input type="text" id="userName" name="userName">
+                <br><br>
+                <label for="birthDate">생년월일:</label>
+                <input type="date" id="birthDate" name="birthDate">
+                <br><br>
+                <span>성별:</span>
+                <input type="radio" id="genderM" name="gender" value="male">
+                <label for="genderM">남성</label>
+                <input type="radio" id="genderF" name="gender" value="female">
+                <label for="genderF">여성</label>
+                <input type="radio" id="genderN" name="gender" value="none" checked>
+                <label for="genderN">선택안함</label>
+                <br><br>
+                <span>관심 분야 (복수 선택 가능):</span><br>
+                <input type="checkbox" id="interestFE" name="interest" value="frontend">
+                <label for="interestFE">웹 프론트엔드 (Vue.js/HTML)</label><br>
+                <input type="checkbox" id="interestUX" name="interest" value="uiux">
+                <label for="interestUX">UI/UX 디자인 표준</label><br>
+                <input type="checkbox" id="interestBE" name="interest" value="backend">
+                <label for="interestBE">백엔드 &amp; 데이터베이스</label><br>
+                <input type="checkbox" id="interestCloud" name="interest" value="cloud">
+                <label for="interestCloud">클라우드 &amp; 인프라</label>
+                <br><br>
+                <label for="joinPath">가입 경로:</label>
+                <select id="joinPath" name="joinPath">
+                    <option value="">-- 선택해 주세요 --</option>
+                    <option value="search">검색 엔진</option>
+                    <option value="sns">SNS</option>
+                    <option value="friend">지인 추천</option>
+                    <option value="ad">광고</option>
+                    <option value="etc">기타</option>
+                </select>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>✏️ 자기소개</legend>
+                <label for="introduce">나를 표현하는 한 줄 소개 또는 가입 인사:</label><br>
+                <textarea id="introduce" name="introduce" rows="4" cols="50" maxlength="200" placeholder="여기에 내용을 입력하세요 (최대 200자)"></textarea>
+            </fieldset>
+            <br>
+            <input type="submit" value="동의하고 회원가입">
+            <input type="reset" value="다시 작성">
+        </form>
+    </main>
+    <script>
+        document.getElementById("signUpForm").addEventListener("submit", function () {
+            alert("회원가입이 완료되었습니다! 🎉");
+        });
+    </script>
+</body>
+</html>
