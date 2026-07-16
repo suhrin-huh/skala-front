@@ -1,91 +1,638 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입 | MC WORLD</title>
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <header>
-        <h1>👤 회원가입</h1>
-        <p>SKALA-FRONT 회원가입을 환영합니다.</p>
-    </header>
-    <main>
-        <form id="signUpForm" action="signUpResult.html" method="get">
-            <fieldset>
-                <legend>🔐 계정 정보</legend>
-                <label for="userId">아이디:</label>
-                <input type="text" id="userId" name="userId" placeholder="4-16자 영문/숫자" minlength="4" maxlength="16" required>
-                <span>(필수)</span>
-                <br><br>
-                <label for="userPw">비밀번호:</label>
-                <input type="password" id="userPw" name="userPw" placeholder="8자 이상 입력" minlength="8" required>
-                <span>(필수)</span>
-                <br><br>
-                <label for="userEmail">이메일:</label>
-                <input type="text" id="userEmail" name="userEmail" placeholder="example" required>
-                @
-                <select id="emailDomain" name="emailDomain">
-                    <option value="direct">직접 입력</option>
-                    <option value="gmail.com">gmail.com</option>
-                    <option value="naver.com">naver.com</option>
-                    <option value="daum.net">daum.net</option>
-                </select>
-                <span>(필수)</span>
-            </fieldset>
-            <br>
-            <fieldset>
-                <legend>🙋 개인 프로필 정보</legend>
-                <label for="userName">이름:</label>
-                <input type="text" id="userName" name="userName">
-                <br><br>
-                <label for="birthDate">생년월일:</label>
-                <input type="date" id="birthDate" name="birthDate">
-                <br><br>
-                <span>성별:</span>
-                <input type="radio" id="genderM" name="gender" value="male">
-                <label for="genderM">남성</label>
-                <input type="radio" id="genderF" name="gender" value="female">
-                <label for="genderF">여성</label>
-                <input type="radio" id="genderN" name="gender" value="none" checked>
-                <label for="genderN">선택안함</label>
-                <br><br>
-                <span>관심 분야 (복수 선택 가능):</span><br>
-                <input type="checkbox" id="interestFE" name="interest" value="frontend">
-                <label for="interestFE">웹 프론트엔드 (Vue.js/HTML)</label><br>
-                <input type="checkbox" id="interestUX" name="interest" value="uiux">
-                <label for="interestUX">UI/UX 디자인 표준</label><br>
-                <input type="checkbox" id="interestBE" name="interest" value="backend">
-                <label for="interestBE">백엔드 &amp; 데이터베이스</label><br>
-                <input type="checkbox" id="interestCloud" name="interest" value="cloud">
-                <label for="interestCloud">클라우드 &amp; 인프라</label>
-                <br><br>
-                <label for="joinPath">가입 경로:</label>
-                <select id="joinPath" name="joinPath">
+    <link href="/css/style.css" rel="stylesheet" />
+
+    <style>
+      /* ============ SIGNUP PAGE EXCLUSIVE STYLES ============ */
+      .hero {
+        padding: 3.5rem 0 2rem;
+      }
+
+      /* 폼 전체 레이아웃 (최대 폭 제한) */
+      .form-container {
+        width: 100%;
+        margin-bottom: 4rem;
+      }
+
+      /* ============ STEP PROCESS BAR ============ */
+      .step-bar {
+        display: flex;
+        border: 1px solid var(--line-strong);
+        border-bottom: none;
+        background: var(--bg);
+      }
+
+      .step-item {
+        flex: 1;
+        text-align: center;
+        padding: 0.8rem 0;
+        font-size: 0.75rem;
+        color: var(--ink-faint);
+        border-right: 1px solid var(--line-strong);
+        transition: all 0.3s ease;
+      }
+
+      .step-item:last-child {
+        border-right: none;
+      }
+
+      /* 현재 활성화된 단계 표시 */
+      .step-item.active {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: bold;
+      }
+
+      /* ============ SLIDE CONTAINER (CAROUSEL-LIKE) ============ */
+      .form-carousel {
+        padding: 2rem 1rem;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* 각 슬라이드 제어 */
+      .form-slide {
+        display: none; /* 기본적으로 비활성화 */
+        padding: 2.5rem 2rem;
+        border: none;
+        margin: 0;
+      }
+
+      /* 활성화된 슬라이드만 노출 */
+      .form-slide.active {
+        display: block;
+      }
+
+      .form-slide legend {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ink);
+        margin-bottom: 1.5rem;
+        padding: 0;
+      }
+
+      /* ============ FORM GROUPS ============ */
+      .form-group {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .form-group:last-child {
+        margin-bottom: 0;
+      }
+
+      @media (min-width: 32rem) {
+        .form-group {
+          grid-template-columns: 8rem 1fr;
+          align-items: center;
+          gap: 1.5rem;
+        }
+        .form-group.align-start {
+          align-items: start;
+        }
+      }
+
+      .form-label {
+        font-size: 0.8125rem;
+        font-weight: bold;
+        color: var(--ink-soft);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .required-mark {
+        color: var(--accent);
+        font-size: 0.75rem;
+      }
+
+      /* 규칙 3. 인풋 포커스 시 배경색 조정 (배경보다 조금만 더 밝은 색: #faf8f5) */
+      .form-control {
+        width: 100%;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        color: var(--ink);
+        outline: none;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .form-control::placeholder {
+        color: var(--ink-faint);
+      }
+
+      .form-control:focus {
+        border-color: var(--accent);
+        background: #faf8f5; /* 기본 배경 #f5f1e8 보다 살짝 화사하고 밝은 크림색 */
+      }
+
+      /* 이메일 정렬 */
+      .email-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      .email-group input,
+      .email-group select {
+        flex: 1;
+      }
+
+      .email-group span {
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+      }
+
+      /* 옵션 버튼 (라디오, 체크박스) */
+      .option-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.8125rem;
+      }
+
+      .option-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+      }
+
+      .option-item input[type="radio"],
+      .option-item input[type="checkbox"] {
+        accent-color: var(--accent);
+        cursor: pointer;
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+
+      .checkbox-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      /* ============ BUTTONS (STEPS CONTROL) ============ */
+      /* 슬라이드를 감싸는 부모 요소 내부에 하단 바 형태로 배치 */
+      .carousel-footer {
+        display: flex;
+        gap: 10px;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid var(--line-strong);
+        background: var(--bg);
+      }
+
+      .btn {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        padding: 0.75rem 1.2rem;
+        border: 1px solid var(--line-strong);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-nav {
+        flex: 2;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .btn-primary:hover {
+        background: #9d3e2a;
+        border-color: #9d3e2a;
+      }
+
+      .btn-secondary {
+        background: var(--bg);
+        color: var(--ink-soft);
+      }
+
+      .btn-secondary:hover {
+        background: var(--line);
+        color: var(--ink);
+      }
+
+      .btn-reset {
+        flex: 1; /* 리셋 버튼은 영역을 적게 차지하도록 설정 */
+      }
+
+      .signup-form-container {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <!-- COMMON ELEMENT : HEADER -->
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="myHoliday.html">휴일계획</a>
+            <a href="myTrip.html">여행앨범</a>
+            <a
+              href="signUp.html"
+              style="
+                border-bottom: 1px solid var(--accent);
+                color: var(--accent);
+              "
+              >회원가입</a
+            >
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <!-- 페이지별 소개글 -->
+        <section class="hero">
+          <span class="eyebrow">JOIN US</span>
+          <h1 class="title">회원가입</h1>
+          <p>
+            SKALA-FRONT 회원가입을 환영합니다. 레트로 모던 스페이스의 멤버가
+            되어보세요.
+          </p>
+        </section>
+
+        <main class="signup-form-container">
+          <form
+            id="signUpForm"
+            class="form-container"
+            action="signUpResult.html"
+            method="get"
+          >
+            <div class="step-bar">
+              <div class="step-item active" id="step1-tab">
+                STEP 1. 계정 정보
+              </div>
+              <div class="step-item" id="step2-tab">STEP 2. 프로필 정보</div>
+              <div class="step-item" id="step3-tab">STEP 3. 자기소개</div>
+            </div>
+
+            <div class="form-carousel">
+              <fieldset class="form-slide active" id="slide-1">
+                <legend>계정 정보</legend>
+                <div class="form-group">
+                  <label class="form-label" for="userId">
+                    아이디
+                    <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="userId"
+                    name="userId"
+                    placeholder="4-16자 영문/숫자"
+                    minlength="4"
+                    maxlength="16"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="userPw">
+                    비밀번호
+                    <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    class="form-control"
+                    type="password"
+                    id="userPw"
+                    name="userPw"
+                    placeholder="8자 이상 입력"
+                    minlength="8"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="userEmail">
+                    이메일
+                    <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <div class="email-group">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="userEmail"
+                      name="userEmail"
+                      placeholder="example"
+                      required
+                    />
+                    <span>@</span>
+                    <select
+                      class="form-control"
+                      id="emailDomain"
+                      name="emailDomain"
+                    >
+                      <option value="direct">직접 입력</option>
+                      <option value="gmail.com">gmail.com</option>
+                      <option value="naver.com">naver.com</option>
+                      <option value="daum.net">daum.net</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="form-slide" id="slide-2">
+                <legend>개인 프로필 정보</legend>
+
+                <div class="form-group">
+                  <label class="form-label" for="userName">이름</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="userName"
+                    name="userName"
+                    placeholder="이름을 입력해 주세요"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="birthDate">생년월일</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="birthDate"
+                    name="birthDate"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <span class="form-label">성별</span>
+                  <div class="option-list">
+                    <label class="option-item" for="genderM">
+                      <input
+                        type="radio"
+                        id="genderM"
+                        name="gender"
+                        value="male"
+                      />
+                      남성
+                    </label>
+                    <label class="option-item" for="genderF">
+                      <input
+                        type="radio"
+                        id="genderF"
+                        name="gender"
+                        value="female"
+                      />
+                      여성
+                    </label>
+                    <label class="option-item" for="genderN">
+                      <input
+                        type="radio"
+                        id="genderN"
+                        name="gender"
+                        value="none"
+                        checked
+                      />
+                      선택안함
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group align-start">
+                  <span class="form-label">관심 분야</span>
+                  <div class="checkbox-stack">
+                    <label class="option-item" for="interestFE">
+                      <input
+                        type="checkbox"
+                        id="interestFE"
+                        name="interest"
+                        value="frontend"
+                      />
+                      웹 프론트엔드 (Vue.js/HTML)
+                    </label>
+                    <label class="option-item" for="interestUX">
+                      <input
+                        type="checkbox"
+                        id="interestUX"
+                        name="interest"
+                        value="uiux"
+                      />
+                      UI/UX 디자인 표준
+                    </label>
+                    <label class="option-item" for="interestBE">
+                      <input
+                        type="checkbox"
+                        id="interestBE"
+                        name="interest"
+                        value="backend"
+                      />
+                      백엔드 &amp; 데이터베이스
+                    </label>
+                    <label class="option-item" for="interestCloud">
+                      <input
+                        type="checkbox"
+                        id="interestCloud"
+                        name="interest"
+                        value="cloud"
+                      />
+                      클라우드 &amp; 인프라
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="joinPath">가입 경로</label>
+                  <select class="form-control" id="joinPath" name="joinPath">
                     <option value="">-- 선택해 주세요 --</option>
                     <option value="search">검색 엔진</option>
                     <option value="sns">SNS</option>
                     <option value="friend">지인 추천</option>
                     <option value="ad">광고</option>
                     <option value="etc">기타</option>
-                </select>
-            </fieldset>
-            <br>
-            <fieldset>
-                <legend>✏️ 자기소개</legend>
-                <label for="introduce">나를 표현하는 한 줄 소개 또는 가입 인사:</label><br>
-                <textarea id="introduce" name="introduce" rows="4" cols="50" maxlength="200" placeholder="여기에 내용을 입력하세요 (최대 200자)"></textarea>
-            </fieldset>
-            <br>
-            <input type="submit" value="동의하고 회원가입">
-            <input type="reset" value="다시 작성">
-        </form>
-    </main>
+                  </select>
+                </div>
+              </fieldset>
+
+              <fieldset class="form-slide" id="slide-3">
+                <legend>자기소개</legend>
+                <div
+                  class="form-group"
+                  style="grid-template-columns: 1fr; gap: 0.75rem"
+                >
+                  <label class="form-label" for="introduce"
+                    >나를 표현하는 한 줄 소개 또는 가입 인사 (최대 200자)</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="introduce"
+                    name="introduce"
+                    rows="5"
+                    maxlength="200"
+                    placeholder="여기에 내용을 입력하세요"
+                    style="resize: vertical; min-height: 6rem"
+                  ></textarea>
+                </div>
+              </fieldset>
+
+              <div class="carousel-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-reset"
+                  id="btn-reset"
+                >
+                  다시 작성
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-nav"
+                  id="btn-prev"
+                  style="display: none"
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary btn-nav"
+                  id="btn-next"
+                >
+                  다음 단계
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-nav"
+                  id="btn-submit"
+                  style="display: none"
+                >
+                  동의하고 회원가입
+                </button>
+              </div>
+            </div>
+          </form>
+        </main>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+
     <script>
-        document.getElementById("signUpForm").addEventListener("submit", function () {
-            alert("회원가입이 완료되었습니다! 🎉");
+      const form = document.getElementById("signUpForm");
+      const slides = document.querySelectorAll(".form-slide");
+      const tabs = document.querySelectorAll(".step-item");
+
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+      const btnSubmit = document.getElementById("btn-submit");
+      const btnReset = document.getElementById("btn-reset");
+
+      let currentStep = 1; // 1, 2, 3 단계 관리
+      const totalSteps = slides.length;
+
+      // 단계 UI 업데이트 핵심 함수
+      function updateStepUI() {
+        // 1. 슬라이드 노출 설정
+        slides.forEach((slide, idx) => {
+          slide.classList.toggle("active", idx + 1 === currentStep);
         });
+
+        // 2. 상단 Step 탭 활성화 클래스 조절
+        tabs.forEach((tab, idx) => {
+          tab.classList.toggle("active", idx + 1 === currentStep);
+        });
+
+        // 3. 버튼 상태 세부 조절
+        if (currentStep === 1) {
+          btnPrev.style.display = "none";
+          btnNext.style.display = "inline-block";
+          btnSubmit.style.display = "none";
+        } else if (currentStep === totalSteps) {
+          btnPrev.style.display = "inline-block";
+          btnNext.style.display = "none";
+          btnSubmit.style.display = "inline-block";
+        } else {
+          btnPrev.style.display = "inline-block";
+          btnNext.style.display = "inline-block";
+          btnSubmit.style.display = "none";
+        }
+      }
+
+      // 다음 단계 핸들러 (유효성 검사 적용)
+      btnNext.addEventListener("click", () => {
+        // 현재 활성화된 슬라이드 내부에 필수(required) 요소가 입력되었는지 실시간 체크!
+        const currentActiveSlide = document.querySelector(".form-slide.active");
+        const requiredInputs =
+          currentActiveSlide.querySelectorAll("[required]");
+
+        let allValid = true;
+        requiredInputs.forEach((input) => {
+          if (!input.checkValidity()) {
+            input.reportValidity(); // 브라우저가 제공하는 빌트인 검사 말풍선 강제 노출
+            allValid = false;
+          }
+        });
+
+        if (allValid && currentStep < totalSteps) {
+          currentStep++;
+          updateStepUI();
+        }
+      });
+
+      // 이전 단계 핸들러
+      btnPrev.addEventListener("click", () => {
+        if (currentStep > 1) {
+          currentStep--;
+          updateStepUI();
+        }
+      });
+
+      // 리셋 기능 고도화 (전체 초기화 및 1단계 귀환)
+      btnReset.addEventListener("click", () => {
+        const confirmReset = confirm(
+          "작성 중인 모든 정보가 사라지고 첫 번째 단계로 돌아갑니다. 진행하시겠습니까? ⚠️",
+        );
+        if (confirmReset) {
+          form.reset();
+          currentStep = 1;
+          updateStepUI();
+        }
+      });
+
+      // 완료 제출 핸들러
+      form.addEventListener("submit", function (e) {
+        alert("회원가입이 완료되었습니다! 🎉");
+      });
     </script>
-</body>
+  </body>
 </html>
