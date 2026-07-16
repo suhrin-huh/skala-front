@@ -1,35 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입 완료</title>
-</head>
-<body>
-    <header>
-        <h1>🎉 회원가입을 진심으로 축하합니다!</h1>
-        <p>SKALA-FRONT 회원이 되신 것을 환영합니다.</p>
-    </header>
-    <hr>
-    <main>
-        <section>
-            <h2>안내 사항</h2>
-            <ul>
-                <li>입력하신 이메일 주소로 가입 확인 메일이 발송되었습니다.</li>
-                <li>보안을 위해 첫 로그인 후 비밀번호를 다시 한번 확인해 주세요.</li>
-                <li>작성하신 프로필 정보는 마이페이지에서 언제든지 수정이 가능합니다.</li>
-            </ul>
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+      /* ============ RESULT PAGE EXCLUSIVE STYLES ============ */
+      .hero {
+        padding: 3.5rem 0 2rem;
+      }
+
+      /* 규칙 1. 이모지 배제 및 title 클래스로 스타일 관리 */
+      .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      /* 얇고 단정한 구분선 정의 */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--line-strong);
+        margin: 2.5rem 0;
+      }
+
+      /* 정보 섹션 배치 */
+      .result-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .section-subtitle {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--ink);
+        margin-bottom: 1.25rem;
+        letter-spacing: 0.05em;
+      }
+
+      /* 안내 사항 리스트 스타일링 */
+      .info-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .info-list li {
+        position: relative;
+        padding-left: 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--ink-soft);
+      }
+
+      /* 불릿 포인트조차 기하학적인 네모 형태로 세련되게 세팅 */
+      .info-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55rem;
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+      }
+
+      /* 가로 배치 카드 내비게이션 그리드 */
+      .link-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (min-width: 48rem) {
+        .link-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* 링크 미니 카드 데코레이션 */
+      .link-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.5rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        text-decoration: none;
+        transition: all 0.25s ease;
+      }
+
+      .link-card .card-label {
+        font-family: var(--font-display);
+        font-size: 0.75rem;
+        color: var(--ink-faint);
+        margin-bottom: 1rem;
+        letter-spacing: 0.1em;
+      }
+
+      .link-card .card-name {
+        font-size: 0.875rem;
+        font-weight: bold;
+        color: var(--ink);
+        transition: color 0.2s ease;
+      }
+
+      /* 마우스 오버 시 미니멀한 반전 인터랙션 */
+      .link-card:hover {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .link-card:hover .card-name {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="myHoliday.html">휴일계획</a>
+            <a href="myTrip.html">여행앨범</a>
+            <a href="signUp.html">회원가입</a>
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <section class="hero">
+          <span class="eyebrow">WELCOME ABOARD</span>
+          <h1 class="title">회원가입을 진심으로 축하합니다!</h1>
+          <p>
+            SKALA-FRONT 회원이 되신 것을 환영합니다. 함께 멋진 웹 생태계를
+            탐험해 보아요.
+          </p>
         </section>
-        <hr>
-        <section>
-            <h2>이동하기</h2>
-            <p>아래 링크를 클릭하면 이전에 작성한 다른 페이지로 이동할 수 있습니다.</p>
-            <ul>
-                <li><a href="myProfile.html">👤 나의 프로필 보기</a></li>
-                <li><a href="myClass.html">🗓️ 나의 수업 시간표 보기</a></li>
-                <li><a href="myHoliday.html">🌈 나의 휴일 계획 보기</a></li>
+
+        <hr class="divider" />
+
+        <main>
+          <section class="result-section">
+            <h2 class="section-subtitle">INFO</h2>
+            <ul class="info-list">
+              <li>입력하신 이메일 주소로 가입 확인 메일이 발송되었습니다.</li>
+              <li>
+                보안을 위해 첫 로그인 후 비밀번호를 다시 한번 확인해 주세요.
+              </li>
+              <li>
+                작성하신 프로필 정보는 마이페이지에서 언제든지 수정이
+                가능합니다.
+              </li>
             </ul>
-        </section>
-    </main>
-</body>
+          </section>
+
+          <hr class="divider" />
+
+          <section class="result-section">
+            <h2 class="section-subtitle">NAVIGATE</h2>
+            <p
+              style="
+                font-size: 0.8125rem;
+                color: var(--ink-soft);
+                line-height: 1.6;
+              "
+            >
+              아래 카드를 클릭하면 이전에 작성한 다른 페이지로 바로 이동할 수
+              있습니다.
+            </p>
+
+            <div class="link-grid">
+              <a href="myProfile.html" class="link-card">
+                <span class="card-label">PROFILE</span>
+                <span class="card-name">나의 프로필 보기</span>
+              </a>
+
+              <a href="myClass.html" class="link-card">
+                <span class="card-label">SCHEDULE</span>
+                <span class="card-name">나의 수업 시간표 보기</span>
+              </a>
+
+              <a href="myHoliday.html" class="link-card">
+                <span class="card-label">VACATION</span>
+                <span class="card-name">나의 휴일 계획 보기</span>
+              </a>
+            </div>
+          </section>
+        </main>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+  </body>
 </html>

@@ -18,23 +18,34 @@
 
     <style>
       /* ============ TRIP PAGE EXCLUSIVE STYLES ============ */
-      .hero {
-        padding: 3.5rem 0 2rem;
+      /* 히어로 영역 2단 그리드 */
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 3.5rem 0 3rem;
+        align-items: center;
       }
 
-      .title {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(2.2rem, 6vw, 4rem);
-        line-height: 1;
-        letter-spacing: -0.01em;
-        color: var(--ink);
+      @media (min-width: 56rem) {
+        .hero-grid {
+          grid-template-columns: 1.4fr 1fr;
+          gap: 4rem;
+        }
       }
 
-      .divider {
-        border: none;
-        border-top: 1px solid var(--line-strong);
-        margin: 3rem 0;
+      .hero-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .hero-text p {
+        margin-top: 1rem;
+        max-width: 34rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--ink-soft);
       }
 
       .section-subtitle {
@@ -46,160 +57,79 @@
         letter-spacing: 0.05em;
       }
 
-      /* ============ 1. CD PLAYER SIDEBAR & HOVER TRIGGER ============ */
-      /* 호버를 감지하고 매끄럽게 동작하게 하기 위한 트리거 감지 영역 */
-      .sidebar-trigger-zone {
-        position: fixed;
-        right: 0;
-        top: 0;
-        height: 100vh;
-        width: 6rem; /* 플로팅 버튼 주변 영역까지 포함하여 마우스 유실 방지 */
-        z-index: 998;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        pointer-events: auto;
-      }
-
-      /* 우측 플로팅 원형 버튼 (이벤트 트리거 전용) */
-      .cd-floating-btn {
-        margin-right: 1.5rem;
-        width: 3.5rem;
-        height: 3.5rem;
-        border-radius: 50%;
-        background: var(--bg);
-        border: 2px solid var(--accent);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition:
-          transform 0.2s ease,
-          background-color 0.2s ease,
-          border-color 0.2s ease;
-      }
-
-      .cd-floating-btn:hover,
-      .cd-floating-btn.active {
-        transform: scale(1.1);
-        background: var(--accent-soft);
-        border-color: var(--accent);
-      }
-
-      /* 헤드셋 & 이퀄라이저 SVG 아이콘 스타일 */
-      .player-icon {
-        width: 1.6rem;
-        height: 1.6rem;
-        fill: var(--ink);
-        transition: fill 0.2s ease;
-      }
-
-      .cd-floating-btn:hover .player-icon {
-        fill: var(--accent);
-      }
-
-      /* 특정 상태 아이콘 제어 */
-      .icon-play-state {
-        display: none;
-      }
-      .icon-stop-state {
-        display: block;
-      }
-
-      .cd-floating-btn.playing .icon-play-state {
-        display: block;
-      }
-      .cd-floating-btn.playing .icon-stop-state {
-        display: none;
-      }
-
-      /* 오른쪽 사이드바 슬라이드 패널 */
-      .cd-sidebar {
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: 22rem;
-        height: 100vh;
-        background: var(--bg);
-        border-left: 1px solid var(--line-strong);
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08);
-        z-index: 999;
-        transform: translateX(100%);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        padding: 3.5rem 1.5rem;
+      /* ============ CD PLAYER HERO INTEGRATION ============ */
+      .hero-player-showcase {
         display: flex;
         flex-direction: column;
         align-items: center;
-        box-sizing: border-box;
+        justify-content: center;
+        width: 100%;
+        position: relative;
+        padding-bottom: 5.5rem; /* 늘어나는 줄과 가이드 텍스트 간 공간 확보 */
       }
 
-      /* 사이드바 오픈 상태 */
-      .cd-sidebar.open {
-        transform: translateX(0);
-      }
-
-      /* 벽걸이 CD 플레이어 메인 유닛 */
+      /* 벽걸이 CD 플레이어 메인 유닛 (150px 규격으로 전면 축소) */
       .cd-player {
         position: relative;
-        width: 16rem;
-        height: 16rem;
-        border-radius: 1.8rem;
+        width: 150px;
+        height: 150px;
+        border-radius: 1.2rem;
         background: #e9e4d6;
         border: 1.5px solid var(--line-strong);
         box-shadow:
-          0 10px 30px rgba(0, 0, 0, 0.06),
-          inset 0 -4px 6px rgba(0, 0, 0, 0.05);
+          0 8px 20px rgba(0, 0, 0, 0.04),
+          inset 0 -3px 5px rgba(0, 0, 0, 0.04);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 3rem;
       }
 
-      /* 스피커 그릴 데코 */
+      /* 미니멀 규격 스피커 그릴 데코 */
       .cd-player::before,
       .cd-player::after {
         content: "";
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 10px;
-        height: 60px;
+        width: 6px;
+        height: 40px;
         background-image: radial-gradient(
-          var(--line-strong) 1.5px,
-          transparent 1.5px
+          var(--line-strong) 1px,
+          transparent 1px
         );
-        background-size: 5px 6px;
+        background-size: 3px 4px;
       }
       .cd-player::before {
-        left: 12px;
+        left: 8px;
       }
       .cd-player::after {
-        right: 12px;
+        right: 8px;
       }
 
+      /* CD 장착 구역 비율 축소 */
       .cd-well {
         position: relative;
-        width: 12rem;
-        height: 12rem;
+        width: 112px;
+        height: 112px;
         border-radius: 50%;
         background: #2a2927;
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
+      /* CD 알맹이 비율 축소 */
       .cd-disc {
         position: relative;
-        width: 11.2rem;
-        height: 11.2rem;
+        width: 104px;
+        height: 104px;
         border-radius: 50%;
         background-image: url("https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=400&q=80");
         background-size: cover;
         background-position: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -208,12 +138,12 @@
       }
 
       .cd-center {
-        width: 2.2rem;
-        height: 2.2rem;
+        width: 20px;
+        height: 20px;
         background: #1c1a17;
-        border: 3.5px solid #dfd9cb;
+        border: 2.5px solid #dfd9cb;
         border-radius: 50%;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
       }
 
       @keyframes spin {
@@ -225,33 +155,65 @@
         }
       }
 
-      /* ============ 3. PULL STRING PHYSICS (탄성 구조 수정) ============ */
+      /* 컴팩트 상태 인디케이터 비율 축소 */
+      .cd-status-indicator {
+        position: absolute;
+        top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+      }
+
+      .player-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        fill: var(--ink-soft);
+      }
+
+      .icon-play-state {
+        display: none;
+      }
+      .icon-stop-state {
+        display: block;
+      }
+
+      .cd-player.playing .icon-play-state {
+        display: block;
+        fill: var(--accent);
+      }
+      .cd-player.playing .icon-stop-state {
+        display: none;
+      }
+
+      /* ============ PULL STRING PHYSICS (시작점 상단 이동 튜닝) ============ */
       .pull-string-container {
         position: absolute;
-        bottom: -6.5rem;
+        bottom: -4.2rem;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         flex-direction: column;
         align-items: center;
         cursor: pointer;
-        z-index: 10;
-        /* 최상단을 고정 축으로 설정 */
         transform-origin: top center;
       }
 
-      /* 탄성을 위한 transition 속성 추가 */
       .string-line {
         width: 2px;
-        height: 5rem;
+        height: 4rem;
         background: var(--line-strong);
-        transform-origin: top center; /* 기준점을 상단으로 박제 */
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 기본 컴백 애니메이션 */
+        transform-origin: top center;
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
       .string-handle {
-        width: 10px;
-        height: 18px;
+        width: 8px;
+        height: 15px;
         background: #dfd9cb;
         border: 1px solid var(--line-strong);
         border-radius: 2px;
@@ -259,48 +221,46 @@
         transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
-      /* 마우스를 당기는 순간(액티브)에 극적인 연출 */
       .pull-string-container:active .string-line {
-        transform: scaleY(1.3); /* 수직으로 늘어남 */
-        transition: transform 0.05s ease-out; /* 빠르게 하강 */
-      }
-
-      .pull-string-container:active .string-handle {
-        transform: translateY(1.5rem); /* 핸들도 함께 하강 */
+        transform: scaleY(1.35);
         transition: transform 0.05s ease-out;
       }
 
-      /* 줄을 놓았을 때 튕기는 진동 탄성 애니메이션 (Elastic Bounce) */
+      .pull-string-container:active .string-handle {
+        transform: translateY(1.4rem);
+        transition: transform 0.05s ease-out;
+      }
+
       @keyframes stringElasticBounce {
         0% {
-          transform: scaleY(1.3);
+          transform: scaleY(1.35);
         }
         30% {
-          transform: scaleY(0.85);
-        } /* 위로 튕겨올라감 */
+          transform: scaleY(0.8);
+        }
         50% {
-          transform: scaleY(1.1);
-        } /* 다시 미세하게 내려감 */
+          transform: scaleY(1.15);
+        }
         70% {
-          transform: scaleY(0.95);
-        } /* 살짝 위 */
+          transform: scaleY(0.9);
+        }
         100% {
           transform: scaleY(1);
-        } /* 평온 */
+        }
       }
 
       @keyframes handleElasticBounce {
         0% {
-          transform: translateY(1.5rem);
+          transform: translateY(1.4rem);
         }
         30% {
-          transform: translateY(-0.75rem);
+          transform: translateY(-0.8rem);
         }
         50% {
-          transform: translateY(0.5rem);
+          transform: translateY(0.6rem);
         }
         70% {
-          transform: translateY(-0.25rem);
+          transform: translateY(-0.4rem);
         }
         100% {
           transform: translateY(0);
@@ -308,101 +268,277 @@
       }
 
       .pulling .string-line {
-        animation: stringElasticBounce 0.75s
-          cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        animation: stringElasticBounce 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+          both;
       }
 
       .pulling .string-handle {
-        animation: handleElasticBounce 0.75s
-          cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        animation: handleElasticBounce 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+          both;
       }
 
       .cd-title-guide {
-        margin-top: 8rem;
-        font-size: 0.8125rem;
+        position: absolute;
+        bottom: 1rem;
+        width: 100%;
+        font-size: 0.75rem;
         color: var(--ink-soft);
         text-align: center;
-        font-weight: bold;
+        letter-spacing: 0.02em;
+        line-height: 1.5;
       }
 
-      /* ============ SCROLL DRIVEN GALLERY CARD ============ */
+      /* ============ 3D FOLDER & FLIP CARD INTERACTION ============ */
       .travel-section-container {
         width: 100%;
-      }
-
-      .scroll-container {
-        width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 8rem;
-        padding: 2rem 0;
+        align-items: center;
+        padding-bottom: 8rem;
+        overflow-x: hidden; /* 우측으로 카드가 나갈 때 가로 스크롤 방지 */
       }
 
-      .card-row-wrapper {
+      .travel-section-container .hero-text {
+        text-align: center;
+        margin-bottom: 4rem;
         width: 100%;
-        display: flex;
-        justify-content: center;
-        animation: revealOnScroll ease both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 40%;
       }
 
-      @keyframes revealOnScroll {
-        from {
-          opacity: 0;
-          transform: translateY(80px) scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      .gallery-card {
+      /* 아날로그 폴더 메타포 구조 */
+      .folder-showcase {
+        position: relative;
         width: 100%;
-        max-width: 36rem;
-        background: var(--bg);
+        max-width: 28rem;
+        height: 20rem;
+        margin: 2rem auto;
+      }
+
+      /* 폴더 뒷면 (배경) */
+      .folder-back {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: #dfd9cb;
         border: 1px solid var(--line-strong);
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.25s ease;
+        border-radius: 1rem 1rem 0 0;
+        box-shadow: inset 0 -5px 15px rgba(0, 0, 0, 0.05);
+        z-index: 1;
       }
 
-      .gallery-card .img-container {
+      /* 폴더 인덱스 탭 (서류철 꼬리표 느낌) */
+      .folder-tab {
+        position: absolute;
+        top: -2rem;
+        left: 2rem;
+        width: 8rem;
+        height: 2rem;
+        background: #dfd9cb;
+        border: 1px solid var(--line-strong);
+        border-bottom: none;
+        border-radius: 0.5rem 0.5rem 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+      }
+
+      /* 폴더 앞면 (카드를 덮어주는 영역) */
+      .folder-front {
+        position: absolute;
+        bottom: -1px;
         width: 100%;
-        aspect-ratio: 16 / 10;
+        height: 65%; /* 카드가 살짝 보이도록 높이를 낮게 설정 */
+        background: #e9e4d6;
+        border: 1px solid var(--line-strong);
+        border-radius: 1rem;
+        box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.08);
+        z-index: 20; /* 카드보다 높은 z-index로 덮어줌 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .folder-front-label {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: 0.25em;
+        color: var(--ink-soft);
+        opacity: 0.4;
+      }
+
+      /* 폴더 내부의 카드 컨테이너 */
+      .folder-cards {
+        position: absolute;
+        bottom: 15%; /* 폴더 앞뒷면 사이에 카드가 위치 */
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        perspective: 1500px;
+      }
+
+      /* 개별 카드 (기본: 폴더 안에 삐져나온 상태) */
+      .flip-card.folder-item {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 22rem;
+        height: 24rem;
+        margin-left: -11rem; /* 가로 중앙 정렬 보정 */
+        transition:
+          transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+          z-index 0s 0.1s;
+        transform-origin: bottom center;
+        background: transparent;
+      }
+
+      /* 초기 카드 지그재그 배치 (살짝 위로 삐져나오게) */
+      .folder-item:nth-child(1) {
+        transform: translateY(0%) rotate(-6deg);
+        z-index: 11;
+      }
+      .folder-item:nth-child(2) {
+        transform: translateY(-8%) rotate(2deg);
+        z-index: 12;
+      }
+      .folder-item:nth-child(3) {
+        transform: translateY(-4%) rotate(8deg);
+        z-index: 13;
+      }
+
+      /* 호버 시 카드가 좀 더 위로 솟아오름 */
+      .folder-item:not(.pulled-out):nth-child(1):hover {
+        transform: translateY(-25%) rotate(-3deg);
+        z-index: 25;
+      }
+      .folder-item:not(.pulled-out):nth-child(2):hover {
+        transform: translateY(-28%) rotate(0deg);
+        z-index: 25;
+      }
+      .folder-item:not(.pulled-out):nth-child(3):hover {
+        transform: translateY(-25%) rotate(4deg);
+        z-index: 25;
+      }
+
+      /* 클릭하여 우측으로 꺼낸 상태 (Pulled Out) */
+      .folder-item.pulled-out {
+        /* 우측으로 크게 이동, 각도 초기화, 폴더 앞으로 나오게 z-index 극대화 */
+        transform: translate(105%, -15%) rotate(0deg) !important;
+        z-index: 50 !important;
+      }
+
+      /* 모바일 대응: 우측 공간이 없으므로 위로 꺼냄 */
+      @media (max-width: 64rem) {
+        .folder-item.pulled-out {
+          transform: translate(0, -110%) rotate(0deg) !important;
+        }
+      }
+
+      /* 카드의 내부 3D 회전 휠 */
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+
+      /* 꺼낸 카드의 뒷면 회전 */
+      .folder-item.pulled-out .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      /* 카드 앞/뒷면 공통 패널 */
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        border: 1px solid var(--line-strong);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-front {
+        background-color: var(--bg);
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
-        border: 1px solid var(--line);
+      }
+
+      .card-front .img-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
         background: #e6dfcf;
       }
 
-      .gallery-card img {
+      .card-front img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.4s ease;
       }
 
-      .gallery-card figcaption {
-        margin-top: 1.25rem;
-        font-size: 0.9rem;
+      /* ============ 뒷면 및 닫기 버튼 전용 ============ */
+      .card-back {
+        background-color: #faf7f0;
+        background-image: linear-gradient(#e9e3d5 1px, transparent 1px);
+        background-size: 100% 2.2rem;
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        padding: 2.2rem 2rem;
+        text-align: left;
+        box-sizing: border-box;
+      }
+
+      /* 카드 우측 상단 닫기(다시 넣기) 버튼 */
+      .card-close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 60;
+        font-family: var(--font-display);
         font-weight: bold;
         color: var(--ink);
-        text-align: center;
-        transition: color 0.2s ease;
+        transition: all 0.2s ease;
       }
 
-      .gallery-card:hover {
-        border-color: var(--accent);
+      .card-close-btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+        transform: scale(1.1);
       }
 
-      .gallery-card:hover img {
-        transform: scale(1.03);
-      }
-
-      .gallery-card:hover figcaption {
-        color: var(--accent);
+      /* 닫기 버튼 추가로 우표 위치 미세 조정 */
+      .postcard-stamp {
+        position: absolute;
+        top: 3.5rem; /* 버튼을 피해 살짝 아래로 */
+        right: 1.5rem;
+        width: 4rem;
+        height: 4.8rem;
+        border: 2px dashed var(--line-strong);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.75;
       }
     </style>
   </head>
@@ -431,21 +567,18 @@
           <div class="utility">MINCHAE HWANG</div>
         </header>
 
-        <section class="hero">
-          <span class="eyebrow">TRAVEL LOG</span>
-          <h1 class="title">나의 여행지</h1>
-          <p>
-            시간이 멈춘 듯한 공간, 기억하고 싶은 여행의 기록들을 담은 멀티미디어
-            아카이브입니다. 우측 CD 아이콘 영역에 마우스를 올려 음악을 켜보세요.
-          </p>
-        </section>
+        <section class="hero-grid">
+          <div class="hero-text">
+            <span class="eyebrow">TRAVEL LOG</span>
+            <h1 class="title">나의 여행지</h1>
+            <p>
+              시간이 멈춘 듯한 공간, 기억하고 싶은 여행의 기록들을 담은
+              멀티미디어 아카이브입니다.
+            </p>
+            <p>우측 플레이어의 줄을 클릭하면 플레이어가 작동합니다.</p>
+          </div>
 
-        <hr class="divider" />
-
-        <main>
-          <section class="travel-section-container">
-            <h2 class="section-subtitle">TRAVEL ALBUM</h2>
-
+          <div class="hero-player-showcase">
             <audio id="bgm-player" loop>
               <source
                 src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
@@ -453,32 +586,195 @@
               />
             </audio>
 
-            <div class="scroll-container">
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/bali.jpg" alt="발리 자연 경관" />
-                  </div>
-                  <figcaption>발리</figcaption>
-                </figure>
+            <div class="cd-player" id="cd-player-device">
+              <div class="cd-status-indicator">
+                <svg
+                  class="player-icon icon-play-state"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect x="4" y="10" width="3" height="4">
+                    <animate
+                      attributeName="height"
+                      values="4; 16; 4"
+                      dur="0.6s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="y"
+                      values="10; 4; 10"
+                      dur="0.6s"
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                  <rect x="10" y="6" width="3" height="12">
+                    <animate
+                      attributeName="height"
+                      values="12; 20; 12"
+                      dur="0.8s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="y"
+                      values="6; 2; 6"
+                      dur="0.8s"
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                  <rect x="16" y="10" width="3" height="4">
+                    <animate
+                      attributeName="height"
+                      values="4; 14; 4"
+                      dur="0.5s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="y"
+                      values="10; 5; 10"
+                      dur="0.5s"
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                </svg>
               </div>
 
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/greece.jpeg" alt="그리스 산토리니" />
-                  </div>
-                  <figcaption>그리스</figcaption>
-                </figure>
+              <div class="cd-well">
+                <div class="cd-disc" id="cd-disc-media">
+                  <div class="cd-center"></div>
+                </div>
               </div>
 
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/osaka.webp" alt="오사카 도톤보리" />
+              <div
+                class="pull-string-container"
+                id="pull-trigger"
+                aria-label="줄을 당겨 플레이어 제어"
+              >
+                <div class="string-line"></div>
+                <div class="string-handle"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <main>
+          <section class="travel-section-container">
+            <div class="hero-text">
+              <h2 class="section-subtitle">TRAVEL ALBUM</h2>
+              <p>
+                아카이브 폴더 안의 카드를 클릭하여 여행의 기억을 꺼내보세요.
+              </p>
+            </div>
+
+            <!-- 아카이브 폴더 컨테이너 -->
+            <div class="folder-showcase">
+              <!-- 1. 폴더 뒷면 & 탭 -->
+              <div class="folder-back"></div>
+              <div class="folder-tab">ARCHIVE</div>
+
+              <!-- 2. 폴더 속 카드들 -->
+              <div class="folder-cards">
+                <!-- 카드 1 -->
+                <div class="flip-card folder-item">
+                  <div class="flip-card-inner">
+                    <div class="card-front">
+                      <div class="img-container">
+                        <img src="../media/bali.jpg" alt="발리 자연 경관" />
+                        <div class="card-front-guide">BALI, INDONESIA</div>
+                      </div>
+                    </div>
+                    <div class="card-back">
+                      <button
+                        class="card-close-btn"
+                        aria-label="폴더에 다시 넣기"
+                      >
+                        ×
+                      </button>
+                      <div class="postcard-stamp">
+                        <span class="postcard-stamp-label">POST<br />CARD</span>
+                      </div>
+                      <div class="letter-content">
+                        <div class="letter-date">JULY 16, 2026</div>
+                        <p class="letter-body">
+                          초록빛 우붓 정글 속에서 매일 아침 눈을 떴어.<br />
+                          나뭇잎 스치는 소리만 가득한 숲에서 요가를 하고,<br />
+                          달콤한 바나나 팬케이크를 먹던 평화로움.<br />
+                          그곳에 두고 온 바람의 온도가 아직도 그리워.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <figcaption>오사카</figcaption>
-                </figure>
+                </div>
+
+                <!-- 카드 2 -->
+                <div class="flip-card folder-item">
+                  <div class="flip-card-inner">
+                    <div class="card-front">
+                      <div class="img-container">
+                        <img src="../media/greece.jpeg" alt="그리스 산토리니" />
+                        <div class="card-front-guide">SANTORINI, GREECE</div>
+                      </div>
+                    </div>
+                    <div class="card-back">
+                      <button
+                        class="card-close-btn"
+                        aria-label="폴더에 다시 넣기"
+                      >
+                        ×
+                      </button>
+                      <div class="postcard-stamp">
+                        <span class="postcard-stamp-label">AIR<br />MAIL</span>
+                      </div>
+                      <div class="letter-content">
+                        <div class="letter-date">JULY 16, 2026</div>
+                        <p class="letter-body">
+                          골목 모퉁이를 돌 때마다 펼쳐지던 눈부신 지중해.<br />
+                          새하얀 벽과 파란 돔, 그리고 붉게 타오르던 이아마을의
+                          낙조.<br />
+                          세상의 소음이 썰물처럼 밀려나갔던 순간,<br />
+                          마치 우주의 한 구석에 우리만 서 있는 느낌이었어.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 카드 3 -->
+                <div class="flip-card folder-item">
+                  <div class="flip-card-inner">
+                    <div class="card-front">
+                      <div class="img-container">
+                        <img src="../media/osaka.webp" alt="오사카 도톤보리" />
+                        <div class="card-front-guide">OSAKA, JAPAN</div>
+                      </div>
+                    </div>
+                    <div class="card-back">
+                      <button
+                        class="card-close-btn"
+                        aria-label="폴더에 다시 넣기"
+                      >
+                        ×
+                      </button>
+                      <div class="postcard-stamp">
+                        <span class="postcard-stamp-label">EXPRESS</span>
+                      </div>
+                      <div class="letter-content">
+                        <div class="letter-date">JULY 16, 2026</div>
+                        <p class="letter-body">
+                          화려한 네온사인과 길거리 골목 구석구석 퍼지던
+                          소리들.<br />
+                          오사카의 밤거리는 마치 따뜻한 타코야키 연기 같았어.<br />
+                          소박한 이자카야에서 나누던 소소한 맥주 한 잔의
+                          기억이<br />
+                          오늘 밤 유난히 더 생각나는 시간이야.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. 폴더 앞면 (카드를 덮음) -->
+              <div class="folder-front">
+                <span class="folder-front-label">MEMORIES</span>
               </div>
             </div>
           </section>
@@ -494,155 +790,52 @@
       </div>
     </div>
 
-    <div class="sidebar-trigger-zone" id="sidebar-trigger-area">
-      <div class="cd-floating-btn" id="floating-btn">
-        <svg
-          class="player-icon icon-stop-state"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12v7c0 1.1.9 2 2 2h4v-8H4v-1c0-4.41 3.59-8 8-8s8 3.59 8 8v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-5.52-4.48-10-10-10z"
-          />
-        </svg>
-        <svg
-          class="player-icon icon-play-state"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect x="4" y="10" width="3" height="4" transform="translate(0 0)">
-            <animate
-              attributeName="height"
-              values="4; 16; 4"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="10; 4; 10"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="10" y="6" width="3" height="12">
-            <animate
-              attributeName="height"
-              values="12; 20; 12"
-              dur="0.8s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="6; 2; 6"
-              dur="0.8s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="16" y="10" width="3" height="4">
-            <animate
-              attributeName="height"
-              values="4; 14; 4"
-              dur="0.5s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="10; 5; 10"
-              dur="0.5s"
-              repeatCount="indefinite"
-            />
-          </rect>
-        </svg>
-      </div>
-    </div>
-
-    <aside class="cd-sidebar" id="music-sidebar">
-      <div class="cd-player">
-        <div class="cd-well">
-          <div class="cd-disc" id="cd-disc-media">
-            <div class="cd-center"></div>
-          </div>
-        </div>
-
-        <div
-          class="pull-string-container"
-          id="pull-trigger"
-          aria-label="줄을 당겨 플레이어 제어"
-        >
-          <div class="string-line"></div>
-          <div class="string-handle"></div>
-        </div>
-      </div>
-
-      <p class="cd-title-guide">
-        하단의 줄을 잡고 아래로 세게 당겼다 놓으면<br />CD 플레이어가 전자기
-        탄성과 함께 작동합니다.
-      </p>
-    </aside>
-
     <script>
       const bgmPlayer = document.getElementById("bgm-player");
-
-      const sidebarZone = document.getElementById("sidebar-trigger-area");
-      const sidebar = document.getElementById("music-sidebar");
-      const floatingBtn = document.getElementById("floating-btn");
-
+      const cdPlayerDevice = document.getElementById("cd-player-device");
       const pullTrigger = document.getElementById("pull-trigger");
       const cdDiscMedia = document.getElementById("cd-disc-media");
 
       let isPlaying = false;
 
-      // 1. 호버 인터랙션 (열기 / 닫기)
-      // 트리거 영역(버튼 포함)에 마우스가 들어오면 사이드바 열림
-      sidebarZone.addEventListener("mouseenter", () => {
-        sidebar.classList.add("open");
-        floatingBtn.classList.add("active");
-      });
-
-      // 사이드바 자체에 마우스가 들어왔을 때도 열려있는 상태 유지 보조
-      sidebar.addEventListener("mouseenter", () => {
-        sidebar.classList.add("open");
-        floatingBtn.classList.add("active");
-      });
-
-      // 마우스가 사이드바 영역 밖으로 완전히 벗어나면 자동으로 닫힘
-      sidebar.addEventListener("mouseleave", () => {
-        sidebar.classList.remove("open");
-        floatingBtn.classList.remove("active");
-      });
-
-      // 트리거 영역 바깥으로 마우스가 나갔을 때도 닫힘 연동 (사이드바 미도달 대응)
-      sidebarZone.addEventListener("mouseleave", (e) => {
-        // 사이드바 방향(오른쪽)으로 마우스가 간 게 아니면 닫음
-        if (e.clientX < window.innerWidth - 352) {
-          // 352px은 사이드바 너비(22rem)
-          sidebar.classList.remove("open");
-          floatingBtn.classList.remove("active");
-        }
-      });
-
-      // 2. CD 플레이어 줄당기기 탄성 물리 인터랙션
+      // 1. 줄당기기 탄성 물리 인터랙션
       pullTrigger.addEventListener("click", () => {
-        // 탄성 진동 애니메이션 개시
         pullTrigger.classList.add("pulling");
 
-        // 750ms(탄성 진동 주기) 이후 애니메이션 클래스 원상태 복귀
         setTimeout(() => {
           pullTrigger.classList.remove("pulling");
-        }, 750);
+        }, 800); // 800ms 탄성 바운스 지속
 
-        // 오디오 재생/정지 및 아이콘 상태 동기화
         if (!isPlaying) {
           bgmPlayer.play();
           cdDiscMedia.style.animationPlayState = "running";
-          floatingBtn.classList.add("playing"); // 헤드셋 -> 파장 SVG 전환
+          cdPlayerDevice.classList.add("playing");
           isPlaying = true;
         } else {
           bgmPlayer.pause();
           cdDiscMedia.style.animationPlayState = "paused";
-          floatingBtn.classList.remove("playing"); // 파장 -> 헤드셋 SVG 전환
+          cdPlayerDevice.classList.remove("playing");
           isPlaying = false;
         }
+      });
+
+      // 2. 3D 카드 플립 제어 로직
+      const flipCards = document.querySelectorAll(".flip-card");
+
+      flipCards.forEach((card) => {
+        const clickBtn = card.querySelector(".card-flip-btn");
+        const backSide = card.querySelector(".card-back");
+
+        // 앞면 중앙의 CLICK 버튼 클릭 시 뒤집힘 (flipped 클래스 추가)
+        clickBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); // 부모 캡처링 방지
+          card.classList.add("flipped");
+        });
+
+        // 뒷면 어디든지 클릭하면 다시 원래 앞면으로 복귀
+        backSide.addEventListener("click", () => {
+          card.classList.remove("flipped");
+        });
       });
     </script>
   </body>
