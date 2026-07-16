@@ -1,51 +1,488 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to MC WORLD</title>
-</head>
-<body>
-    <header>
-        <h1>MC의 유니버스 🚀</h1>
-        <p>저의 프로필, 학습 내용, 여행 기록을 모아둔 Hub 페이지입니다.</p>
-    </header>
-    <nav>
-        <h2>🧭 바로가기 메뉴</h2>
-        <ul>
-            <li><a href="myProfile.html">👤 소개 (Profile)</a></li>
-            <li><a href="myClass.html">📅 수업 시간표 (Class)</a></li>
-            <li><a href="myHoliday.html">🌈 휴일 계획 (Holiday)</a></li>
-            <li><a href="myTrip.html">📷 여행 앨범 (Album)</a></li>
-            <li><a href="signUp.html">✍️ 회원가입 (Sign Up)</a></li>
-        </ul>
-    </nav>
-    <main>
-        <section>
-            <h2>📢 오늘의 주요 소식</h2>
-            <article>
-                <h3>최근 공지 및 업데이트</h3>
-                <p><strong>[업데이트] 여행 앨범에 동영상 추가 완료!</strong></p>
-                <p>홋카이도 대설산 단애 아래에 펼친 브이로그 영상을 추가했습니다. 이제 소리와 영상으로 여행을 추억할 수 있습니다.</p>
-                <p>작성일: 2026년 6월 11일</p>
-            </article>
-            <article>
-                <h3>🏔️ 이달의 베스트 컷</h3>
-                <figure>
-                    <img src="../media/" alt="리장 호도협의 웅장한 협곡 모습" width="500">
-                    <figcaption>중국 리장 호도협의 웅장한 협곡 모습 (2025년 촬영)</figcaption>
-                </figure>
-            </article>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MC WORLD</title>
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============ DESIGN TOKENS ============ */
+      :root {
+        --bg: #f5f1e8;
+        --ink: #1c1a17;
+        --ink-soft: #6f6a5e;
+        --ink-faint: #a29c8c;
+
+        --line: #ddd6c5;
+        --line-strong: #c9c0a8;
+
+        --accent: #b6503a;
+        --accent-soft: #f1ddd4;
+
+        --grid-size: 48px;
+        --font-display: "Space Grotesk", sans-serif;
+        --font-mono: "NeoDunggeunmo", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-mono);
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      figure,
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      /* ============ PAGE / GRID BACKGROUND ============ */
+      .page {
+        position: relative;
+        min-height: 100vh;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: var(--grid-size) var(--grid-size);
+        background-position: -1px -1px;
+      }
+
+      .inner {
+        max-width: 76rem;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      /* ============ TOP BAR ============ */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: 1.25rem 0;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--line-strong);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.03em;
+        background: var(--bg);
+      }
+
+      .brand span {
+        padding: 0.4rem 0.9rem;
+      }
+
+      .brand span:first-child {
+        border-bottom: 1px solid var(--line-strong);
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        font-size: 0.8125rem;
+      }
+
+      nav a {
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        border-color: var(--ink);
+      }
+
+      .utility {
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+      }
+
+      /* ============ HERO ============ */
+      .hero {
+        padding: 3.5rem 0 3rem;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        color: var(--ink-soft);
+        margin-bottom: 0.75rem;
+      }
+
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        line-height: 1;
+        letter-spacing: -0.01em;
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        max-width: 34rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      /* ============ CONTENT GRID ============ */
+      .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 3rem;
+      }
+
+      @media (min-width: 56rem) {
+        .content {
+          grid-template-columns: 3fr 1.4fr;
+        }
+      }
+
+      .panel {
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        padding: 2rem;
+      }
+
+      .panel-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-top: 0.5rem;
+      }
+
+      /* ============ FEATURED / CAROUSEL ============ */
+      .featured {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .featured-texture {
+        position: absolute;
+        right: -1.5rem;
+        bottom: -1rem;
+        width: 11rem;
+        height: 7rem;
+        transform: rotate(-6deg);
+        background-image: radial-gradient(
+          var(--ink-faint) 1px,
+          transparent 1.4px
+        );
+        background-size: 9px 9px;
+        opacity: 0.6;
+        z-index: 0;
+      }
+
+      .carousel {
+        position: relative;
+        z-index: 1;
+        margin-top: 1.5rem;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .carousel-viewport {
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .carousel-track {
+        display: flex;
+        transition: transform 0.4s ease;
+      }
+
+      .carousel-slide {
+        flex: 0 0 100%;
+        width: 100%;
+      }
+
+      .carousel-card {
+        min-height: 11rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .carousel-card .date {
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--ink-soft);
+      }
+
+      .carousel-card h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+        line-height: 1.25;
+        text-decoration: underline;
+        text-underline-offset: 0.35rem;
+        text-decoration-color: var(--line-strong);
+        max-width: 30rem;
+      }
+
+      .carousel-card p {
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--ink-soft);
+        max-width: 28rem;
+      }
+
+      .carousel-dots {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        gap: 0.625rem;
+        margin-top: 1.5rem;
+      }
+
+      .carousel-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .carousel-dot.active {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ============ INFO LIST ============ */
+      .update-list {
+        list-style: none;
+        margin-top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .update-list li {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        gap: 0.75rem;
+        padding: 0.9rem 0;
+        border-top: 1px solid var(--line);
+        font-size: 0.8125rem;
+      }
+
+      .update-list li:first-child {
+        border-top: none;
+      }
+
+      .u-label {
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+      }
+
+      .u-value a {
+        color: var(--accent);
+        text-decoration: underline;
+        text-underline-offset: 0.2rem;
+      }
+
+      /* ============ FOOTER ============ */
+      .page-footer {
+        padding: 1.5rem 0 2.5rem;
+        font-size: 0.75rem;
+        color: var(--ink-faint);
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <!-- 상단 네비게이션 -->
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="myHoliday.html">휴일계획</a>
+            <a href="myTrip.html">여행앨범</a>
+            <a href="signUp.html">회원가입</a>
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <!-- 히어로 -->
+        <section class="hero">
+          <h1>MC WORLD</h1>
+          <p>저의 프로필, 학습 내용, 여행 기록을 모아둔 Hub 페이지입니다.</p>
         </section>
-    </main>
-    <aside>
-        <h2>📍 실시간 정보</h2>
-        <p>현재 위치: 광주광역시 광산구</p>
-        <p>추천 학습 사이트: <a href="https://www.w3schools.com" target="_blank">W3Schools 온라인 명세서</a></p>
-    </aside>
-    <footer>
-        <p>이메일 문의: medit74@sk.com</p>
-        <p>© 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서 작성되었습니다.</p>
-    </footer>
-</body>
+
+        <!-- 콘텐츠 -->
+        <div class="content">
+          <!-- NEWS -->
+          <section class="panel featured">
+            <div class="featured-texture" aria-hidden="true"></div>
+            <span class="eyebrow">NEWS</span>
+            <div class="carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track" id="track">
+                  <article class="carousel-slide">
+                    <div class="carousel-card">
+                      <span class="date">2026.06.11</span>
+                      <h3>여행 앨범 업데이트</h3>
+                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
+                    </div>
+                  </article>
+                  <article class="carousel-slide">
+                    <div class="carousel-card">
+                      <span class="date">2026.06.11</span>
+                      <h3>여행 앨범 업데이트</h3>
+                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
+                    </div>
+                  </article>
+                  <article class="carousel-slide">
+                    <div class="carousel-card">
+                      <span class="date">2026.06.11</span>
+                      <h3>여행 앨범 업데이트</h3>
+                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
+                    </div>
+                  </article>
+                </div>
+              </div>
+              <div class="carousel-dots" id="dots"></div>
+            </div>
+          </section>
+
+          <!-- SIDE : 실시간 정보 등 -->
+          <aside class="panel updates">
+            <span class="eyebrow">INFO</span>
+            <h2 class="panel-title">실시간 정보</h2>
+            <ul class="update-list">
+              <li>
+                <span class="u-label">위치</span>
+                <span class="u-value">광주광역시 광산구</span>
+              </li>
+              <li>
+                <span class="u-label">추천 사이트</span>
+                <span class="u-value">
+                  <a
+                    href="https://www.w3schools.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >W3Schools 명세서</a
+                  >
+                </span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const track = document.getElementById("track");
+      const dotsEl = document.getElementById("dots");
+
+      const realSlides = Array.from(track.children);
+      const total = realSlides.length;
+
+      // Infinite Loop Clones
+      const firstClone = realSlides[0].cloneNode(true);
+      const lastClone = realSlides[total - 1].cloneNode(true);
+
+      track.insertBefore(lastClone, realSlides[0]);
+      track.appendChild(firstClone);
+
+      let index = 1;
+
+      function setTransform(withTransition = true) {
+        track.style.transition = withTransition
+          ? "transform 0.4s ease"
+          : "none";
+        track.style.transform = `translateX(-${index * 100}%)`;
+      }
+
+      function updateDots() {
+        const realIndex = (index - 1 + total) % total;
+        [...dotsEl.children].forEach((dot, i) => {
+          dot.classList.toggle("active", i === realIndex);
+        });
+      }
+
+      // Generate Navigation Dots
+      realSlides.forEach((_, i) => {
+        const dot = document.createElement("button");
+        dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+        dot.setAttribute("aria-label", `${i + 1}번째 소식으로 이동`);
+        dot.addEventListener("click", () => {
+          index = i + 1;
+          setTransform();
+          updateDots();
+        });
+        dotsEl.appendChild(dot);
+      });
+
+      // Loop Shift Reset on Transition End
+      track.addEventListener("transitionend", () => {
+        if (index === total + 1) {
+          index = 1;
+          setTransform(false);
+        } else if (index === 0) {
+          index = total;
+          setTransform(false);
+        }
+      });
+
+      // Initial Position Setup
+      setTransform(false);
+    </script>
+  </body>
 </html>
