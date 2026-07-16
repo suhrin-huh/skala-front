@@ -1,45 +1,649 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나의 여행지</title>
-</head>
-<body>
-    <header>
-        <h1>✈️ 나의 여행지</h1>
-    </header>
-    <main>
-        <section>
-            <h2>🎵 나의 여행 앨범</h2>
-            <audio controls>
-                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                브라우저가 audio 태그를 지원하지 않습니다.
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>나의 여행지 | MC WORLD</title>
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+      /* ============ TRIP PAGE EXCLUSIVE STYLES ============ */
+      .hero {
+        padding: 3.5rem 0 2rem;
+      }
+
+      .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+
+      .divider {
+        border: none;
+        border-top: 1px solid var(--line-strong);
+        margin: 3rem 0;
+      }
+
+      .section-subtitle {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--ink);
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.05em;
+      }
+
+      /* ============ 1. CD PLAYER SIDEBAR & HOVER TRIGGER ============ */
+      /* 호버를 감지하고 매끄럽게 동작하게 하기 위한 트리거 감지 영역 */
+      .sidebar-trigger-zone {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        width: 6rem; /* 플로팅 버튼 주변 영역까지 포함하여 마우스 유실 방지 */
+        z-index: 998;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        pointer-events: auto;
+      }
+
+      /* 우측 플로팅 원형 버튼 (이벤트 트리거 전용) */
+      .cd-floating-btn {
+        margin-right: 1.5rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.2s ease,
+          background-color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .cd-floating-btn:hover,
+      .cd-floating-btn.active {
+        transform: scale(1.1);
+        background: var(--accent-soft);
+        border-color: var(--accent);
+      }
+
+      /* 헤드셋 & 이퀄라이저 SVG 아이콘 스타일 */
+      .player-icon {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: var(--ink);
+        transition: fill 0.2s ease;
+      }
+
+      .cd-floating-btn:hover .player-icon {
+        fill: var(--accent);
+      }
+
+      /* 특정 상태 아이콘 제어 */
+      .icon-play-state {
+        display: none;
+      }
+      .icon-stop-state {
+        display: block;
+      }
+
+      .cd-floating-btn.playing .icon-play-state {
+        display: block;
+      }
+      .cd-floating-btn.playing .icon-stop-state {
+        display: none;
+      }
+
+      /* 오른쪽 사이드바 슬라이드 패널 */
+      .cd-sidebar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 22rem;
+        height: 100vh;
+        background: var(--bg);
+        border-left: 1px solid var(--line-strong);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08);
+        z-index: 999;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 3.5rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      /* 사이드바 오픈 상태 */
+      .cd-sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* 벽걸이 CD 플레이어 메인 유닛 */
+      .cd-player {
+        position: relative;
+        width: 16rem;
+        height: 16rem;
+        border-radius: 1.8rem;
+        background: #e9e4d6;
+        border: 1.5px solid var(--line-strong);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.06),
+          inset 0 -4px 6px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 3rem;
+      }
+
+      /* 스피커 그릴 데코 */
+      .cd-player::before,
+      .cd-player::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 60px;
+        background-image: radial-gradient(
+          var(--line-strong) 1.5px,
+          transparent 1.5px
+        );
+        background-size: 5px 6px;
+      }
+      .cd-player::before {
+        left: 12px;
+      }
+      .cd-player::after {
+        right: 12px;
+      }
+
+      .cd-well {
+        position: relative;
+        width: 12rem;
+        height: 12rem;
+        border-radius: 50%;
+        background: #2a2927;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cd-disc {
+        position: relative;
+        width: 11.2rem;
+        height: 11.2rem;
+        border-radius: 50%;
+        background-image: url("https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=400&q=80");
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: spin 6s linear infinite;
+        animation-play-state: paused;
+      }
+
+      .cd-center {
+        width: 2.2rem;
+        height: 2.2rem;
+        background: #1c1a17;
+        border: 3.5px solid #dfd9cb;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ============ 3. PULL STRING PHYSICS (탄성 구조 수정) ============ */
+      .pull-string-container {
+        position: absolute;
+        bottom: -6.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        z-index: 10;
+        /* 최상단을 고정 축으로 설정 */
+        transform-origin: top center;
+      }
+
+      /* 탄성을 위한 transition 속성 추가 */
+      .string-line {
+        width: 2px;
+        height: 5rem;
+        background: var(--line-strong);
+        transform-origin: top center; /* 기준점을 상단으로 박제 */
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 기본 컴백 애니메이션 */
+      }
+
+      .string-handle {
+        width: 10px;
+        height: 18px;
+        background: #dfd9cb;
+        border: 1px solid var(--line-strong);
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      /* 마우스를 당기는 순간(액티브)에 극적인 연출 */
+      .pull-string-container:active .string-line {
+        transform: scaleY(1.3); /* 수직으로 늘어남 */
+        transition: transform 0.05s ease-out; /* 빠르게 하강 */
+      }
+
+      .pull-string-container:active .string-handle {
+        transform: translateY(1.5rem); /* 핸들도 함께 하강 */
+        transition: transform 0.05s ease-out;
+      }
+
+      /* 줄을 놓았을 때 튕기는 진동 탄성 애니메이션 (Elastic Bounce) */
+      @keyframes stringElasticBounce {
+        0% {
+          transform: scaleY(1.3);
+        }
+        30% {
+          transform: scaleY(0.85);
+        } /* 위로 튕겨올라감 */
+        50% {
+          transform: scaleY(1.1);
+        } /* 다시 미세하게 내려감 */
+        70% {
+          transform: scaleY(0.95);
+        } /* 살짝 위 */
+        100% {
+          transform: scaleY(1);
+        } /* 평온 */
+      }
+
+      @keyframes handleElasticBounce {
+        0% {
+          transform: translateY(1.5rem);
+        }
+        30% {
+          transform: translateY(-0.75rem);
+        }
+        50% {
+          transform: translateY(0.5rem);
+        }
+        70% {
+          transform: translateY(-0.25rem);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      .pulling .string-line {
+        animation: stringElasticBounce 0.75s
+          cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+
+      .pulling .string-handle {
+        animation: handleElasticBounce 0.75s
+          cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+
+      .cd-title-guide {
+        margin-top: 8rem;
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+        text-align: center;
+        font-weight: bold;
+      }
+
+      /* ============ SCROLL DRIVEN GALLERY CARD ============ */
+      .travel-section-container {
+        width: 100%;
+      }
+
+      .scroll-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8rem;
+        padding: 2rem 0;
+      }
+
+      .card-row-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        animation: revealOnScroll ease both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      @keyframes revealOnScroll {
+        from {
+          opacity: 0;
+          transform: translateY(80px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .gallery-card {
+        width: 100%;
+        max-width: 36rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.25s ease;
+      }
+
+      .gallery-card .img-container {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #e6dfcf;
+      }
+
+      .gallery-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      .gallery-card figcaption {
+        margin-top: 1.25rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--ink);
+        text-align: center;
+        transition: color 0.2s ease;
+      }
+
+      .gallery-card:hover {
+        border-color: var(--accent);
+      }
+
+      .gallery-card:hover img {
+        transform: scale(1.03);
+      }
+
+      .gallery-card:hover figcaption {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a href="myHoliday.html">휴일계획</a>
+            <a
+              href="myTrip.html"
+              style="
+                border-bottom: 1px solid var(--accent);
+                color: var(--accent);
+              "
+              >여행앨범</a
+            >
+            <a href="signUp.html">회원가입</a>
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <section class="hero">
+          <span class="eyebrow">TRAVEL LOG</span>
+          <h1 class="title">나의 여행지</h1>
+          <p>
+            시간이 멈춘 듯한 공간, 기억하고 싶은 여행의 기록들을 담은 멀티미디어
+            아카이브입니다. 우측 CD 아이콘 영역에 마우스를 올려 음악을 켜보세요.
+          </p>
+        </section>
+
+        <hr class="divider" />
+
+        <main>
+          <section class="travel-section-container">
+            <h2 class="section-subtitle">TRAVEL ALBUM</h2>
+
+            <audio id="bgm-player" loop>
+              <source
+                src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+                type="audio/mpeg"
+              />
             </audio>
-            <figure>
-                <img src="../media/bali.jpg" alt="발리" width="400">
-                <figcaption>발리</figcaption>
-            </figure>
-            <figure>
-                <img src="../media/greece.jpeg" alt="그리스" width="400">
-                <figcaption>그리스</figcaption>
-            </figure>
-            <figure>
-                <img src="../media/osaka.webp" alt="오사카" width="400">
-                <figcaption>오사카</figcaption>
-            </figure>
-        </section>
-        <hr>
-        <section>
-            <h2>🎬 나의 여행 브이로그</h2>
-            <figure>
-                <video controls width="500">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    브라우저가 video 태그를 지원하지 않습니다.
-                </video>
-                <figcaption>여행의 아름다운 순간들</figcaption>
-            </figure>
-        </section>
-    </main> 
-</body>
+
+            <div class="scroll-container">
+              <div class="card-row-wrapper">
+                <figure class="gallery-card">
+                  <div class="img-container">
+                    <img src="../media/bali.jpg" alt="발리 자연 경관" />
+                  </div>
+                  <figcaption>발리</figcaption>
+                </figure>
+              </div>
+
+              <div class="card-row-wrapper">
+                <figure class="gallery-card">
+                  <div class="img-container">
+                    <img src="../media/greece.jpeg" alt="그리스 산토리니" />
+                  </div>
+                  <figcaption>그리스</figcaption>
+                </figure>
+              </div>
+
+              <div class="card-row-wrapper">
+                <figure class="gallery-card">
+                  <div class="img-container">
+                    <img src="../media/osaka.webp" alt="오사카 도톤보리" />
+                  </div>
+                  <figcaption>오사카</figcaption>
+                </figure>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <div class="sidebar-trigger-zone" id="sidebar-trigger-area">
+      <div class="cd-floating-btn" id="floating-btn">
+        <svg
+          class="player-icon icon-stop-state"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12v7c0 1.1.9 2 2 2h4v-8H4v-1c0-4.41 3.59-8 8-8s8 3.59 8 8v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-5.52-4.48-10-10-10z"
+          />
+        </svg>
+        <svg
+          class="player-icon icon-play-state"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="4" y="10" width="3" height="4" transform="translate(0 0)">
+            <animate
+              attributeName="height"
+              values="4; 16; 4"
+              dur="0.6s"
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="y"
+              values="10; 4; 10"
+              dur="0.6s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          <rect x="10" y="6" width="3" height="12">
+            <animate
+              attributeName="height"
+              values="12; 20; 12"
+              dur="0.8s"
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="y"
+              values="6; 2; 6"
+              dur="0.8s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          <rect x="16" y="10" width="3" height="4">
+            <animate
+              attributeName="height"
+              values="4; 14; 4"
+              dur="0.5s"
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="y"
+              values="10; 5; 10"
+              dur="0.5s"
+              repeatCount="indefinite"
+            />
+          </rect>
+        </svg>
+      </div>
+    </div>
+
+    <aside class="cd-sidebar" id="music-sidebar">
+      <div class="cd-player">
+        <div class="cd-well">
+          <div class="cd-disc" id="cd-disc-media">
+            <div class="cd-center"></div>
+          </div>
+        </div>
+
+        <div
+          class="pull-string-container"
+          id="pull-trigger"
+          aria-label="줄을 당겨 플레이어 제어"
+        >
+          <div class="string-line"></div>
+          <div class="string-handle"></div>
+        </div>
+      </div>
+
+      <p class="cd-title-guide">
+        하단의 줄을 잡고 아래로 세게 당겼다 놓으면<br />CD 플레이어가 전자기
+        탄성과 함께 작동합니다.
+      </p>
+    </aside>
+
+    <script>
+      const bgmPlayer = document.getElementById("bgm-player");
+
+      const sidebarZone = document.getElementById("sidebar-trigger-area");
+      const sidebar = document.getElementById("music-sidebar");
+      const floatingBtn = document.getElementById("floating-btn");
+
+      const pullTrigger = document.getElementById("pull-trigger");
+      const cdDiscMedia = document.getElementById("cd-disc-media");
+
+      let isPlaying = false;
+
+      // 1. 호버 인터랙션 (열기 / 닫기)
+      // 트리거 영역(버튼 포함)에 마우스가 들어오면 사이드바 열림
+      sidebarZone.addEventListener("mouseenter", () => {
+        sidebar.classList.add("open");
+        floatingBtn.classList.add("active");
+      });
+
+      // 사이드바 자체에 마우스가 들어왔을 때도 열려있는 상태 유지 보조
+      sidebar.addEventListener("mouseenter", () => {
+        sidebar.classList.add("open");
+        floatingBtn.classList.add("active");
+      });
+
+      // 마우스가 사이드바 영역 밖으로 완전히 벗어나면 자동으로 닫힘
+      sidebar.addEventListener("mouseleave", () => {
+        sidebar.classList.remove("open");
+        floatingBtn.classList.remove("active");
+      });
+
+      // 트리거 영역 바깥으로 마우스가 나갔을 때도 닫힘 연동 (사이드바 미도달 대응)
+      sidebarZone.addEventListener("mouseleave", (e) => {
+        // 사이드바 방향(오른쪽)으로 마우스가 간 게 아니면 닫음
+        if (e.clientX < window.innerWidth - 352) {
+          // 352px은 사이드바 너비(22rem)
+          sidebar.classList.remove("open");
+          floatingBtn.classList.remove("active");
+        }
+      });
+
+      // 2. CD 플레이어 줄당기기 탄성 물리 인터랙션
+      pullTrigger.addEventListener("click", () => {
+        // 탄성 진동 애니메이션 개시
+        pullTrigger.classList.add("pulling");
+
+        // 750ms(탄성 진동 주기) 이후 애니메이션 클래스 원상태 복귀
+        setTimeout(() => {
+          pullTrigger.classList.remove("pulling");
+        }, 750);
+
+        // 오디오 재생/정지 및 아이콘 상태 동기화
+        if (!isPlaying) {
+          bgmPlayer.play();
+          cdDiscMedia.style.animationPlayState = "running";
+          floatingBtn.classList.add("playing"); // 헤드셋 -> 파장 SVG 전환
+          isPlaying = true;
+        } else {
+          bgmPlayer.pause();
+          cdDiscMedia.style.animationPlayState = "paused";
+          floatingBtn.classList.remove("playing"); // 파장 -> 헤드셋 SVG 전환
+          isPlaying = false;
+        }
+      });
+    </script>
+  </body>
 </html>
