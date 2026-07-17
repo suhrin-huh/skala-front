@@ -1,69 +1,215 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Class</title>
-</head>
-<body>
-    <nav>
-        <a href="index.html"><strong>메인페이지로 이동하기</strong></a>
-    </nav>
-    <header>
-        <h1>🗓️ 나의 강의 시간표</h1>
-    </header>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>시간</th>
-                <th>월요일</th>
-                <th>화요일</th>
-                <th>수요일</th>
-                <th>목요일</th>
-                <th>금요일</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>09:00 - 10:00</td>
-                <td rowspan="9">📅 </td>
-                <td rowspan="3">🧭 오리엔테이션</td>
-                <td rowspan="3">💻 HTML, CSS, JavaScript(1)</td>
-                <td rowspan="3">🖥️ HTML, CSS, JavaScript(2) </td>
-                <td rowspan="9">🎉 개천절 (공휴일)</td>
-            </tr>
-             <tr>
-                <td>10:00 - 11:00</td>
-            </tr>
-            <tr>
-                <td>11:00 - 12:00</td>
-            </tr>
-            <tr>
-                <td>12:00 - 13:00</td>
-                <td colspan="3">🍚 점심시간</td>
-            </tr>
-            <tr>
-                <td>13:00 - 14:00</td>
-                <td rowspan="3">🤝 팀 빌딩 및 Git의 이해와 활용</td>
-                <td rowspan="3">💻 HTML, CSS, JavaScript(1)</td>
-                <td rowspan="3">🖥️ HTML, CSS, JavaScript(2)</td>
-            </tr>
-            <tr>
-                <td>14:00 - 15:00</td>
-            </tr>
-            <tr>
-                <td>15:00 - 16:00</td>
-            </tr>
-            <tr>
-                <td>16:00 - 17:00</td>
-                <td rowspan="2">📝 개인 학습 시간</td>
-                <td rowspan="2">📝 개인 학습 시간</td>
-                <td rowspan="2">📝 개인 학습 시간</td>
-            </tr>
-            <tr>
-                <td>17:00 - 18:00</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MY CLASS</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+      /* ============ CLASS SCHEDULE PAGE EXCLUSIVE STYLES ============ */
+      .hero {
+        padding: 3.5rem 0 2rem;
+      }
+
+      .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      /* 표를 감싸는 래퍼 (반응형 모바일 스크롤 지원) */
+      .table-responsive-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 4rem;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      }
+
+      /* 레트로 테크 스타일의 테이블 디자인 */
+      .schedule-table {
+        width: 100%;
+        min-width: 48rem; /* 모바일에서 표가 너무 찌그러지는 것을 방지 */
+        border-collapse: collapse;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        text-align: center;
+      }
+
+      .schedule-table th,
+      .schedule-table td {
+        border: 1px solid var(--line-strong);
+        padding: 1.25rem 0.75rem;
+        line-height: 1.6;
+        vertical-align: middle;
+      }
+
+      /* 요일 헤더 부분 */
+      .schedule-table thead th {
+        background: #e9e4d6;
+        font-weight: bold;
+        color: var(--ink);
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--line-strong);
+      }
+
+      /* 일반 데이터 셀 호버 인터랙션 */
+      .schedule-table tbody td {
+        color: var(--ink-soft);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .schedule-table tbody td:hover {
+        color: var(--accent);
+      }
+
+      /* 첫 번째 열 (시간 표시란) 특별 스타일링 */
+      .schedule-table tbody td:first-child {
+        font-family: var(--font-display);
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--ink);
+        background: #faf7f0;
+        white-space: nowrap;
+      }
+
+      /* 휴일 및 점심시간 등 특별 셀 질감 처리 */
+      .cell-special {
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(201, 192, 168, 0.15) 10px,
+          rgba(201, 192, 168, 0.15) 20px
+        );
+        font-weight: bold;
+        color: var(--ink) !important;
+        letter-spacing: 0.1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a
+              href="myClass.html"
+              style="
+                border-bottom: 1px solid var(--accent);
+                color: var(--accent);
+              "
+              >시간표</a
+            >
+            <a href="myHoliday.html">휴일계획</a>
+            <a href="myTrip.html">여행앨범</a>
+            <a href="signUp.html">회원가입</a>
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <section class="hero">
+          <span class="eyebrow">SCHEDULE</span>
+          <h1 class="title">나의 강의 시간표</h1>
+          <p>이번 주 진행되는 프론트엔드 커리큘럼 및 개인 학습 스케줄입니다.</p>
+        </section>
+
+        <main>
+          <div class="table-responsive-wrapper">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>시간</th>
+                  <th>월요일</th>
+                  <th>화요일</th>
+                  <th>수요일</th>
+                  <th>목요일</th>
+                  <th>금요일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>09:00 - 10:00</td>
+                  <td rowspan="9">일정 없음</td>
+                  <td rowspan="3">오리엔테이션</td>
+                  <td rowspan="3">HTML, CSS, JavaScript (1)</td>
+                  <td rowspan="3">HTML, CSS, JavaScript (2)</td>
+                  <td rowspan="9" class="cell-special">개천절 (공휴일)</td>
+                </tr>
+                <tr>
+                  <td>10:00 - 11:00</td>
+                </tr>
+                <tr>
+                  <td>11:00 - 12:00</td>
+                </tr>
+                <tr>
+                  <td>12:00 - 13:00</td>
+                  <td colspan="3" class="cell-special">점심시간</td>
+                </tr>
+                <tr>
+                  <td>13:00 - 14:00</td>
+                  <td rowspan="3">팀 빌딩 및 Git의 이해와 활용</td>
+                  <td rowspan="3">HTML, CSS, JavaScript (1)</td>
+                  <td rowspan="3">HTML, CSS, JavaScript (2)</td>
+                </tr>
+                <tr>
+                  <td>14:00 - 15:00</td>
+                </tr>
+                <tr>
+                  <td>15:00 - 16:00</td>
+                </tr>
+                <tr>
+                  <td>16:00 - 17:00</td>
+                  <td rowspan="2">개인 학습 시간</td>
+                  <td rowspan="2">개인 학습 시간</td>
+                  <td rowspan="2">개인 학습 시간</td>
+                </tr>
+                <tr>
+                  <td>17:00 - 18:00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+  </body>
 </html>
