@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MC WORLD</title>
+    <title>SUHRIN HUH</title>
     <link
       href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
       rel="stylesheet"
@@ -14,11 +14,10 @@
       rel="stylesheet"
     />
     <link href="/css/style.css" rel="stylesheet" />
+    <script src="/script/components.js" defer></script>
     <style>
       /* ============================================
-         MINI GAME SECTION (자바스크립트 챌린지)
-         기존 style.css의 디자인 토큰(--bg, --ink, --ink-soft,
-         --line, --accent, --font-mono, --font-display)을 그대로 사용합니다.
+         MINI GAME SECTION
       ============================================ */
 
       .mini-game {
@@ -34,44 +33,60 @@
         line-height: 1.6;
       }
 
-      .mini-game-buttons {
+      .mini-game-list {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.4rem;
+        margin-top: 1.25rem;
+        width: 100%;
+      }
+
+      .mini-game-card {
         display: flex;
         flex-direction: column;
-        gap: 0.6rem;
-        margin-top: 1.25rem;
-      }
-
-      .btn-game {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.6rem 1.1rem;
-        border: 1px solid var(--ink);
-        background: var(--ink);
-        color: var(--bg);
-        font-family: var(--font-mono);
-        font-size: 0.8125rem;
-        letter-spacing: 0.02em;
+        flex: 1 1 0%;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
         cursor: pointer;
-        transition:
-          background-color 0.2s ease,
-          color 0.2s ease,
-          border-color 0.2s ease;
+        transition: border-color 0.2s ease;
       }
 
-      .btn-game:hover {
-        background: var(--accent);
+      .mini-game-card:hover {
         border-color: var(--accent);
-        color: var(--bg);
       }
 
-      .btn-game:active {
+      .mini-game-card:active {
         transform: translateY(1px);
       }
 
-      .btn-game:focus-visible {
+      .mini-game-card:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 2px;
+      }
+
+      .mini-game-card-thumb {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+      }
+
+      .mini-game-card-title {
+        display: block;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ink-faint);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.2s ease;
+      }
+
+      .mini-game-card:hover .mini-game-card-title {
+        color: var(--ink);
       }
 
       /* ============================================
@@ -143,25 +158,14 @@
     <div class="page">
       <div class="inner">
         <!-- 상단 네비게이션 -->
-        <header class="topbar">
-          <div class="brand">
-            <span>SKALA</span>
-            <span>FRONT</span>
-          </div>
-          <nav>
-            <a href="myProfile.html">소개</a>
-            <a href="myClass.html">시간표</a>
-            <a href="myHoliday.html">휴일계획</a>
-            <a href="myTrip.html">여행앨범</a>
-            <a href="signUp.html">회원가입</a>
-          </nav>
-          <div class="utility">MINCHAE HWANG</div>
-        </header>
-
+        <site-header></site-header>
         <!-- 히어로 -->
         <section class="hero">
-          <h1>MC WORLD</h1>
-          <p>저의 프로필, 학습 내용, 여행 기록을 모아둔 Hub 페이지입니다.</p>
+          <span class="eyebrow">HOME</span>
+          <h1 class="hero-title">NEW WORLD</h1>
+          <p class="hero-desc">
+            일상의 많은 것들에 영감을 받고 이를 기록합니다.
+          </p>
         </section>
 
         <!-- 콘텐츠 -->
@@ -240,35 +244,55 @@
             </section>
 
             <!-- 자바스크립트 챌린지: 업다운 게임 / 성적 계산기 / 내 가방 보기 -->
+            <!-- 자바스크립트 챌린지: 업다운 게임 / 성적 계산기 / 내 가방 보기 -->
             <section class="mini-game">
               <span class="eyebrow">CHALLENGE</span>
-              <h2 class="panel-title">자바스크립트 챌린지</h2>
-              <p class="mini-game-desc">
-                간단한 자바스크립트 실습 기능 두 가지를 넣어봤어요. 버튼을 눌러
-                직접 실행해보세요.
-              </p>
-              <div class="mini-game-buttons">
-                <button type="button" id="updownStartBtn" class="btn-game">
-                  업다운 게임 시작
+              <h2 class="panel-title">MINI GAMES</h2>
+              <p class="mini-game-desc">간단한 미니 게임을 즐겨보세요.</p>
+              <div
+                class="mini-game-list"
+                id="miniGameList"
+                aria-label="자바스크립트 챌린지 목록"
+              >
+                <!-- 업다운 게임 카드 -->
+                <button
+                  type="button"
+                  id="updownStartBtn"
+                  class="mini-game-card"
+                >
+                  <img
+                    src="/media/updown-thumnail.png"
+                    alt="Up & Down! thumnail"
+                    class="mini-game-card-thumb"
+                  />
+                  <span class="mini-game-card-title">Up & Down!</span>
                 </button>
-                <button type="button" id="gradeStartBtn" class="btn-game">
-                  성적 계산기 시작
+
+                <!-- 성적 계산기 카드 -->
+                <button type="button" id="gradeStartBtn" class="mini-game-card">
+                  <img
+                    src="/media/calculator-thumnail.png"
+                    alt="Grade Calculator thumnail"
+                    class="mini-game-card-thumb"
+                  />
+                  <span class="mini-game-card-title">Grade Calculator</span>
                 </button>
-                <button type="button" id="bagStartBtn" class="btn-game">
-                  내 가방 보기
+
+                <!-- 내 가방 보기 카드 -->
+                <button type="button" id="bagStartBtn" class="mini-game-card">
+                  <img
+                    src="/media/bag-thumnail.png"
+                    alt="What's in my bag? thumnail"
+                    class="mini-game-card-thumb"
+                  />
+                  <span class="mini-game-card-title">What's in my bag?</span>
                 </button>
               </div>
             </section>
           </aside>
         </div>
 
-        <footer class="page-footer">
-          <p>이메일 문의: medit74@sk.com</p>
-          <p>
-            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
-            작성되었습니다.
-          </p>
-        </footer>
+        <site-footer></site-footer>
       </div>
     </div>
 
@@ -329,7 +353,6 @@
       // Initial Position Setup
       setTransform(false);
     </script>
-
     <!-- Up-Down 숫자 맞추기 게임 -->
     <script src="/script/upDown.js"></script>
     <!-- 성적 계산기 -->
