@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" href="/css/style.css" />
     <script src="/script/components.js" defer></script>
+    <script src="/script/todoModal.js" defer></script>
 
     <style>
       /* ============ CLASS SCHEDULE PAGE EXCLUSIVE STYLES ============ */
@@ -92,6 +93,150 @@
         font-weight: bold;
         color: var(--ink) !important;
         letter-spacing: 0.1em;
+      }
+
+      /* ============ TODO MODAL & CUSTOM CHECKBOX ============ */
+
+      /* 클릭 가능한 셀 표시를 위한 유틸리티 */
+      .clickable-cell {
+        cursor: pointer;
+        position: relative;
+      }
+      .clickable-cell::after {
+        content: "✓ TO-DO";
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        font-size: 0.65rem;
+        color: var(
+          --accent,
+          #d35400
+        ); /* 포인트 컬러가 없다면 오렌지/브라운 톤으로 */
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .clickable-cell:hover::after {
+        opacity: 1;
+      }
+
+      /* 모달 오버레이 */
+      .todo-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(
+          233,
+          228,
+          214,
+          0.7
+        ); /* 기존 배경과 어울리는 웜톤 딤 처리 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 9999;
+        backdrop-filter: blur(2px);
+      }
+      .todo-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* 모달 컨테이너 (레트로 윈도우 스타일) */
+      .todo-modal {
+        background: #faf7f0;
+        border: 2px solid #5c4a3d;
+        width: 90%;
+        max-width: 420px;
+        box-shadow: 6px 6px 0px rgba(92, 74, 61, 0.15); /* 레트로한 솔리드 쉐도우 */
+        font-family: var(--font-mono);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+      }
+      .todo-modal-overlay.active .todo-modal {
+        transform: translateY(0);
+      }
+
+      /* 모달 헤더 */
+      .todo-header {
+        background: #e9e4d6;
+        border-bottom: 2px solid #5c4a3d;
+        padding: 1rem 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .todo-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #5c4a3d;
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #5c4a3d;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      /* 모달 리스트 영역 */
+      .todo-body {
+        padding: 1.5rem 1.25rem;
+      }
+      .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .todo-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+      }
+      .todo-item:last-child {
+        margin-bottom: 0;
+      }
+
+      /* 커스텀 체크박스 */
+      .todo-item input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #5c4a3d; /* 브라운 보더 */
+        background-color: transparent; /* 배경 없음 */
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0; /* 글자가 길어져도 찌그러지지 않게 */
+        margin-top: 2px;
+      }
+
+      /* 체크되었을 때의 디자인 */
+      .todo-item input[type="checkbox"]:checked::after {
+        content: "✔";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #5c4a3d; /* 체크 마크도 브라운 */
+        font-size: 14px;
+      }
+      .todo-item input[type="checkbox"]:checked + .todo-text {
+        text-decoration: line-through;
+        color: #999;
+      }
+      .todo-text {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--ink);
+        transition: color 0.2s;
       }
     </style>
   </head>
@@ -169,5 +314,71 @@
         <site-footer></site-footer>
       </div>
     </div>
+
+    <!-- TO-DO 모달창 (웹 컴포넌트) -->
+    <todo-modal></todo-modal>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. 과목별 TO-DO 리스트 데이터 (변수 관리)
+        const subjectTodos = {
+          오리엔테이션: [
+            "강의 진행 방식 노션 문서 정독하기",
+            "슬랙(Slack) 워크스페이스 가입 및 자기소개 남기기",
+            "개발용 노트북 환경 설정 (Node.js, Git 등 확인)",
+            "동기들과 인스타그램 맞팔하고 인사 나누기",
+          ],
+          "HTML, CSS, JavaScript (1)": [
+            "시맨틱 태그(Semantic Tag) 개념 복습하기",
+            "CSS Flexbox / Grid 레이아웃 연습 문제 풀기",
+            "JavaScript 변수와 데이터 타입 요약 정리",
+            "모의 웹 페이지 뼈대(HTML) 작성해보기",
+          ],
+          "HTML, CSS, JavaScript (2)": [
+            "CSS 애니메이션(Keyframes) 적용해보기",
+            "JavaScript DOM 조작 메서드 3가지 실습",
+            "이벤트 리스너(Event Listener)로 클릭 이벤트 제어하기",
+            "간단한 투두리스트 UI 퍼블리싱 완성하기",
+          ],
+          "팀 빌딩 및 Git의 이해와 활용": [
+            "팀원들과 그라운드 룰(Ground Rule) 정하기",
+            "Git 기본 명령어 (add, commit, push) 실습",
+            "GitHub Repository 생성 및 콜라보레이터 추가",
+            "브랜치(Branch) 생성 및 PR(Pull Request) 날려보기",
+          ],
+          "개인 학습 시간": [
+            "오늘 배운 내용 블로그(TIL)에 포스팅하기",
+            "프로그래머스 코딩 테스트 0단계 2문제 풀기",
+            "부족했던 CSS 선택자 개념 다시 읽어보기",
+            "내일 진행될 강의 교안 미리 훑어보기",
+          ],
+        };
+
+        // DOM 요소 선택
+        const modal = document.querySelector("todo-modal");
+        const tableCells = document.querySelectorAll(
+          ".schedule-table tbody td",
+        );
+
+        // 2. 표 셀 클릭 이벤트 바인딩
+        tableCells.forEach((cell) => {
+          // 제외 조건: 첫 번째 열(시간표시), 특별한 셀(공휴일/점심시간), "일정 없음" 셀
+          const cellText = cell.innerText.trim();
+          const isTimeColumn = cell.cellIndex === 0;
+          const isSpecial = cell.classList.contains("cell-special");
+          const isEmpty = cellText === "일정 없음" || cellText === "";
+
+          if (!isTimeColumn && !isSpecial && !isEmpty) {
+            // 클릭 가능한 셀에 시각적 피드백 클래스 추가
+            cell.classList.add("clickable-cell");
+
+            // 클릭 시 모달 오픈 (todo-modal 웹 컴포넌트에 위임)
+            cell.addEventListener("click", () => {
+              modal.open(cellText, subjectTodos[cellText]);
+            });
+          }
+        });
+      });
+    </script>
   </body>
 </html>
