@@ -31,23 +31,20 @@
       }
 
       /* ============ 1. CD PLAYER SIDEBAR & HOVER TRIGGER ============ */
-      /* 호버를 감지하고 매끄럽게 동작하게 하기 위한 트리거 감지 영역 */
+      /* 호버 감지 영역을 플로팅 원형 버튼 크기로 제한 */
       .sidebar-trigger-zone {
         position: fixed;
-        right: 0;
-        top: 0;
-        height: 100vh;
-        width: 6rem; /* 플로팅 버튼 주변 영역까지 포함하여 마우스 유실 방지 */
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3.5rem;
+        height: 3.5rem;
         z-index: 998;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
         pointer-events: auto;
       }
 
       /* 우측 플로팅 원형 버튼 (이벤트 트리거 전용) */
       .cd-floating-btn {
-        margin-right: 1.5rem;
         width: 3.5rem;
         height: 3.5rem;
         border-radius: 50%;
@@ -93,6 +90,7 @@
 
       .cd-floating-btn.playing .icon-play-state {
         display: block;
+        fill: url(#eq-flow-gradient);
       }
       .cd-floating-btn.playing .icon-stop-state {
         display: none;
@@ -212,7 +210,7 @@
       /* ============ 3. PULL STRING PHYSICS (탄성 구조 수정) ============ */
       .pull-string-container {
         position: absolute;
-        bottom: -6.5rem;
+        bottom: calc(-6.5rem + 5px);
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -465,6 +463,46 @@
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <defs>
+            <linearGradient
+              id="eq-flow-gradient"
+              gradientUnits="userSpaceOnUse"
+              x1="-24"
+              y1="0"
+              x2="0"
+              y2="0"
+              spreadMethod="reflect"
+            >
+              <stop offset="0%" stop-color="#b6503a">
+                <animate
+                  attributeName="stop-color"
+                  values="#b6503a; #d98c4a; #8a3324; #b6503a"
+                  dur="4s"
+                  repeatCount="indefinite"
+                />
+              </stop>
+              <stop offset="100%" stop-color="#d98c4a">
+                <animate
+                  attributeName="stop-color"
+                  values="#d98c4a; #8a3324; #b6503a; #d98c4a"
+                  dur="4s"
+                  repeatCount="indefinite"
+                />
+              </stop>
+              <animate
+                attributeName="x1"
+                values="-24; 24; -24"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="x2"
+                values="0; 48; 0"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+            </linearGradient>
+          </defs>
           <rect x="4" y="10" width="3" height="4" transform="translate(0 0)">
             <animate
               attributeName="height"
@@ -538,7 +576,6 @@
     <script>
       const bgmPlayer = document.getElementById("bgm-player");
 
-      const sidebarZone = document.getElementById("sidebar-trigger-area");
       const sidebar = document.getElementById("music-sidebar");
       const floatingBtn = document.getElementById("floating-btn");
 
@@ -548,8 +585,8 @@
       let isPlaying = false;
 
       // 1. 호버 인터랙션 (열기 / 닫기)
-      // 트리거 영역(버튼 포함)에 마우스가 들어오면 사이드바 열림
-      sidebarZone.addEventListener("mouseenter", () => {
+      // 플로팅 원형 버튼 위에 마우스가 올라가면 사이드바 열림
+      floatingBtn.addEventListener("mouseenter", () => {
         sidebar.classList.add("open");
         floatingBtn.classList.add("active");
       });
@@ -564,16 +601,6 @@
       sidebar.addEventListener("mouseleave", () => {
         sidebar.classList.remove("open");
         floatingBtn.classList.remove("active");
-      });
-
-      // 트리거 영역 바깥으로 마우스가 나갔을 때도 닫힘 연동 (사이드바 미도달 대응)
-      sidebarZone.addEventListener("mouseleave", (e) => {
-        // 사이드바 방향(오른쪽)으로 마우스가 간 게 아니면 닫음
-        if (e.clientX < window.innerWidth - 352) {
-          // 352px은 사이드바 너비(22rem)
-          sidebar.classList.remove("open");
-          floatingBtn.classList.remove("active");
-        }
       });
 
       // 2. CD 플레이어 줄당기기 탄성 물리 인터랙션
