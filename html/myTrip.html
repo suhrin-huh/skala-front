@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>나의 여행지 | MC WORLD</title>
+    <title>TRIP</title>
     <link
       href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
       rel="stylesheet"
@@ -15,28 +15,12 @@
     />
 
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="/script/components.js" defer></script>
 
     <style>
       /* ============ TRIP PAGE EXCLUSIVE STYLES ============ */
-      .hero {
-        padding: 3.5rem 0 2rem;
-      }
 
-      .title {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(2.2rem, 6vw, 4rem);
-        line-height: 1;
-        letter-spacing: -0.01em;
-        color: var(--ink);
-      }
-
-      .divider {
-        border: none;
-        border-top: 1px solid var(--line-strong);
-        margin: 3rem 0;
-      }
-
+      /* section-subtitle 기본값(style.css)보다 살짝 크고 자간이 넓은 페이지 전용 오버라이드 */
       .section-subtitle {
         font-family: var(--font-display);
         font-weight: 700;
@@ -409,32 +393,12 @@
   <body>
     <div class="page">
       <div class="inner">
-        <header class="topbar">
-          <div class="brand">
-            <span>SKALA</span>
-            <span>FRONT</span>
-          </div>
-          <nav>
-            <a href="myProfile.html">소개</a>
-            <a href="myClass.html">시간표</a>
-            <a href="myHoliday.html">휴일계획</a>
-            <a
-              href="myTrip.html"
-              style="
-                border-bottom: 1px solid var(--accent);
-                color: var(--accent);
-              "
-              >여행앨범</a
-            >
-            <a href="signUp.html">회원가입</a>
-          </nav>
-          <div class="utility">MINCHAE HWANG</div>
-        </header>
+        <site-header active="myTrip"></site-header>
 
         <section class="hero">
           <span class="eyebrow">TRAVEL LOG</span>
-          <h1 class="title">나의 여행지</h1>
-          <p>
+          <h1 class="hero-title">MY TRIP</h1>
+          <p class="hero-desc">
             시간이 멈춘 듯한 공간, 기억하고 싶은 여행의 기록들을 담은 멀티미디어
             아카이브입니다. 우측 CD 아이콘 영역에 마우스를 올려 음악을 켜보세요.
           </p>
@@ -481,13 +445,7 @@
           </section>
         </main>
 
-        <footer class="page-footer">
-          <p>이메일 문의: medit74@sk.com</p>
-          <p>
-            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
-            작성되었습니다.
-          </p>
-        </footer>
+        <site-footer></site-footer>
       </div>
     </div>
 

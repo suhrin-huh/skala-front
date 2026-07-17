@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MY HOLIDAY</title>
+    <title>HOLIDAY</title>
 
     <link
       href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
@@ -16,35 +16,10 @@
     />
 
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="/script/components.js" defer></script>
 
     <style>
       /* ============ HOLIDAY PAGE EXCLUSIVE STYLES ============ */
-      .hero {
-        padding: 3.5rem 0 2rem;
-      }
-
-      .title {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(2.2rem, 6vw, 4rem);
-        line-height: 1;
-        letter-spacing: -0.01em;
-        color: var(--ink);
-      }
-
-      .hero p {
-        margin-top: 1rem;
-        font-size: 0.875rem;
-        line-height: 1.7;
-        color: var(--ink-soft);
-      }
-
-      /* 섹션 간 구분선 */
-      .divider {
-        border: none;
-        border-top: 1px solid var(--line-strong);
-        margin: 3rem 0;
-      }
 
       /* ============ TIMELINE LOG STYLES ============ */
       .timeline-container {
@@ -181,32 +156,12 @@
   <body>
     <div class="page">
       <div class="inner">
-        <header class="topbar">
-          <div class="brand">
-            <span>SKALA</span>
-            <span>FRONT</span>
-          </div>
-          <nav>
-            <a href="myProfile.html">소개</a>
-            <a href="myClass.html">시간표</a>
-            <a
-              href="myHoliday.html"
-              style="
-                border-bottom: 1px solid var(--accent);
-                color: var(--accent);
-              "
-              >휴일계획</a
-            >
-            <a href="myTrip.html">여행앨범</a>
-            <a href="signUp.html">회원가입</a>
-          </nav>
-          <div class="utility">MINCHAE HWANG</div>
-        </header>
+        <site-header active="myHoliday"></site-header>
 
         <section class="hero">
           <span class="eyebrow">DAY OFF</span>
-          <h1 class="title">나의 휴일 일과</h1>
-          <p>
+          <h1 class="hero-title">MY HOLIDAY</h1>
+          <p class="hero-desc">
             여유로운 늦잠부터 나만의 사이트 개발까지, 온전히 나를 위해 채우는
             휴일의 타임라인입니다.
           </p>
@@ -279,13 +234,7 @@
           <div class="meta-info">휴일 버전 업데이트: 2026년 7월 15일</div>
         </main>
 
-        <footer class="page-footer">
-          <p>이메일 문의: medit74@sk.com</p>
-          <p>
-            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
-            작성되었습니다.
-          </p>
-        </footer>
+        <site-footer></site-footer>
       </div>
     </div>
   </body>

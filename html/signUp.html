@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>회원가입 | MC WORLD</title>
+    <title>SIGNUP</title>
     <link
       href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
       rel="stylesheet"
@@ -15,12 +15,10 @@
     />
 
     <link href="/css/style.css" rel="stylesheet" />
+    <script src="/script/components.js" defer></script>
 
     <style>
       /* ============ SIGNUP PAGE EXCLUSIVE STYLES ============ */
-      .hero {
-        padding: 3.5rem 0 2rem;
-      }
 
       /* 폼 전체 레이아웃 (최대 폭 제한) */
       .form-container {
@@ -254,35 +252,14 @@
     <div class="page">
       <div class="inner">
         <!-- COMMON ELEMENT : HEADER -->
-        <header class="topbar">
-          <div class="brand">
-            <span>SKALA</span>
-            <span>FRONT</span>
-          </div>
-          <nav>
-            <a href="myProfile.html">소개</a>
-            <a href="myClass.html">시간표</a>
-            <a href="myHoliday.html">휴일계획</a>
-            <a href="myTrip.html">여행앨범</a>
-            <a
-              href="signUp.html"
-              style="
-                border-bottom: 1px solid var(--accent);
-                color: var(--accent);
-              "
-              >회원가입</a
-            >
-          </nav>
-          <div class="utility">MINCHAE HWANG</div>
-        </header>
+        <site-header active="signUp"></site-header>
 
         <!-- 페이지별 소개글 -->
         <section class="hero">
           <span class="eyebrow">JOIN US</span>
-          <h1 class="title">회원가입</h1>
-          <p>
-            SKALA-FRONT 회원가입을 환영합니다. 레트로 모던 스페이스의 멤버가
-            되어보세요.
+          <h1 class="hero-title">SIGN UP</h1>
+          <p class="hero-desc">
+            여러분의 이야기도 궁금해요. 회원가입 후 방명록을 남겨주세요.
           </p>
         </section>
 
@@ -537,13 +514,7 @@
           </form>
         </main>
 
-        <footer class="page-footer">
-          <p>이메일 문의: medit74@sk.com</p>
-          <p>
-            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
-            작성되었습니다.
-          </p>
-        </footer>
+        <site-footer></site-footer>
       </div>
     </div>
 

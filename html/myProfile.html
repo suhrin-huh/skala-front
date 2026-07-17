@@ -14,20 +14,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="/script/components.js" defer></script>
 
     <style>
       /* ============ PROFILE PAGE EXCLUSIVE STYLES ============ */
-      .hero {
-        padding: 3.5rem 0 2rem;
-      }
-
-      .title {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(2.2rem, 6vw, 4rem);
-        color: var(--ink);
-      }
-
       .profile-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -39,14 +29,6 @@
         .profile-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-      }
-
-      .section-subtitle {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--ink);
-        margin-bottom: 1.5rem;
       }
 
       /* 리스트 및 설명 리스트 커스텀 스타일 */
@@ -86,29 +68,12 @@
   <body>
     <div class="page">
       <div class="inner">
-        <header class="topbar">
-          <div class="brand"><span>SKALA</span><span>FRONT</span></div>
-          <nav>
-            <a
-              href="myProfile.html"
-              style="
-                border-bottom: 1px solid var(--accent);
-                color: var(--accent);
-              "
-              >소개</a
-            >
-            <a href="myClass.html">시간표</a>
-            <a href="myHoliday.html">휴일계획</a>
-            <a href="myTrip.html">여행앨범</a>
-            <a href="signUp.html">회원가입</a>
-          </nav>
-          <div class="utility">MINCHAE HWANG</div>
-        </header>
+        <site-header active="myProfile"></site-header>
 
         <section class="hero">
           <span class="eyebrow">ABOUT ME</span>
-          <h1 class="title">안녕하세요! 저를 소개합니다</h1>
-          <p>
+          <h1 class="hero-title">MY PROFILE</h1>
+          <p class="hero-desc">
             제가 좋아하는 것들과 올해의 계획, 그리고 저를 표현하는 단어들입니다.
           </p>
         </section>
@@ -147,9 +112,7 @@
           </section>
         </main>
 
-        <footer class="page-footer">
-          <p>프로필 버전 작성일: 2026년 7월 15일</p>
-        </footer>
+        <site-footer note="프로필 버전 작성일: 2026년 7월 15일"></site-footer>
       </div>
     </div>
   </body>
