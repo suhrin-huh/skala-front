@@ -150,7 +150,6 @@ nav a.active {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 3.5rem 0 2rem;
 }
 
 .eyebrow {
@@ -187,11 +186,11 @@ nav a.active {
 .divider {
   border: none;
   border-top: 1px solid var(--line-strong);
-  margin: 3rem 0;
+  margin: 1rem 0;
 }
 
-/* ============ CONTENT GRID ============ */
-.content {
+/* ============ HOME CONTENT GRID ============ */
+.home-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
@@ -199,7 +198,7 @@ nav a.active {
 }
 
 @media (min-width: 56rem) {
-  .content {
+  .home-content {
     grid-template-columns: 3fr 1.4fr;
   }
 }
@@ -229,14 +228,7 @@ nav a.active {
 }
 
 .panel-section {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
-}
-
-.panel-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  /* 이후 통일된 스타일 적용을 위해서 남겨두었음. */
 }
 
 /* ============ FEATURED / CAROUSEL ============ */
