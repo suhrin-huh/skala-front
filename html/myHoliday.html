@@ -19,122 +19,7 @@
     <script src="/script/components.js" defer></script>
 
     <style>
-      /* ============ HOLIDAY PAGE EXCLUSIVE STYLES ============ */
-
-      /* ============ TIMELINE LOG STYLES ============ */
-      .timeline-container {
-        max-width: 48rem;
-        margin-bottom: 4rem;
-      }
-
-      /* 각 시간대별 블록 */
-      .timeline-block {
-        margin-bottom: 3rem;
-      }
-
-      .timeline-block:last-child {
-        margin-bottom: 0;
-      }
-
-      /* 타임라인 섹션 헤더 (ex. LATE MORNING) */
-      .timeline-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .timeline-header h2 {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1.25rem;
-        letter-spacing: 0.05em;
-        color: var(--ink);
-      }
-
-      .timeline-header .sub-label {
-        font-family: var(--font-mono);
-        font-size: 0.8125rem;
-        color: var(--ink-soft);
-        font-weight: normal;
-      }
-
-      /* 타임라인 축 및 리스트 */
-      .timeline-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        border-left: 1px solid var(--line-strong);
-        padding-left: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      /* 개별 일정 아이템 */
-      .timeline-item {
-        position: relative;
-        display: grid;
-        grid-template-columns: 4rem 1fr;
-        gap: 1rem;
-        align-items: baseline;
-        transition: transform 0.2s ease;
-      }
-
-      @media (min-width: 32rem) {
-        .timeline-item {
-          grid-template-columns: 5rem 1fr;
-          gap: 2rem;
-        }
-      }
-
-      /* 타임라인 노드 (왼쪽 선에 붙는 네모/원 점) */
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -1.82rem; /* 선 굵기와 패딩에 맞춘 정밀 보정 */
-        top: 0.35rem;
-        width: 0.5rem;
-        height: 0.5rem;
-        background: var(--bg);
-        border: 1px solid var(--line-strong);
-        transition:
-          background-color 0.2s ease,
-          border-color 0.2s ease;
-      }
-
-      /* 타임라인 시간 */
-      .timeline-time {
-        font-family: var(--font-display);
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--ink-soft);
-        letter-spacing: 0.05em;
-      }
-
-      /* 타임라인 내용 */
-      .timeline-desc {
-        font-family: var(--font-mono);
-        font-size: 0.875rem;
-        color: var(--ink);
-        line-height: 1.6;
-      }
-
-      /* 호버 인터랙션 */
-      .timeline-item:hover {
-        transform: translateX(4px);
-      }
-
-      .timeline-item:hover::before {
-        background: var(--accent);
-        border-color: var(--accent);
-      }
-
-      .timeline-item:hover .timeline-time {
-        color: var(--accent);
-      }
-
-      /* 기존 <mark> 태그를 대체하는 커스텀 하이라이트 스타일 */
+      /* ============ 기존 공통 및 히어로 영역 스타일 유지 ============ */
       .highlight {
         background: var(--accent-soft);
         color: var(--accent);
@@ -142,14 +27,373 @@
         font-weight: bold;
         border-radius: 2px;
       }
-
-      /* 휴일 버전 작성일 등 메타 정보 (푸터 상단) */
       .meta-info {
         font-size: 0.75rem;
         color: var(--ink-faint);
         margin-top: 2rem;
         padding-top: 1rem;
         border-top: 1px dashed var(--line);
+        text-align: right;
+      }
+
+      /* ============ INTERACTIVE PANORAMA CONTAINER ============ */
+      .panorama-container {
+        position: relative;
+        width: 100%;
+        height: 560px; /* main 섹션 안에 고정된 높이 할당 */
+        border: 2px solid var(--line-strong);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        background-color: #000;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      /* ==========================================
+    Layer 1: 연속적인 하나의 거대한 파노라마 배경
+========================================== */
+      .layer-1-sky {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 800%; /* 8배 크기의 단일 DOM */
+        height: 100%;
+
+        /* 가로로 흐르는 시간대별 하늘 컬러맵 (각 뷰포트의 중앙 지점에 컬러 스탑 배치) */
+        background: linear-gradient(
+          to right,
+          #87ceeb 6.25%,
+          /* 0번: 11:00 (오전) */ #6cbded 18.75%,
+          /* 1번: 11:10 */ #50abeb 31.25%,
+          /* 2번: 11:30 */ #4facfe 43.75%,
+          /* 3번: 13:00 (정오) */ #fa709a 56.25%,
+          /* 4번: 16:00 (노을 시작) */ #ff7043 68.75%,
+          /* 5번: 18:00 (노을 절정) */ #141e30 81.25%,
+          /* 6번: 20:00 (밤) */ #090e17 93.75% /* 7번: 23:00 (깊은 밤) */
+        );
+
+        transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+        z-index: 1;
+      }
+
+      /* 
+  💡 보너스 디테일: 
+  배경을 가로(to right) 그라데이션으로 바꿨기 때문에 하늘 특유의 위아래 깊이감이 살짝 아쉬울 수 있어. 
+  그럴 땐 컨테이너 자체에 고정된 세로 그라데이션 오버레이를 깔아주면 2D 요소가 확 입체적으로 변해! 
+*/
+      .panorama-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1) 0%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.15) 100%
+        );
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .sky-panel {
+        flex: 1;
+        height: 100%;
+      }
+
+      /* 8단계 하늘 색상 */
+      .sky-0 {
+        background: linear-gradient(180deg, #87ceeb 0%, #f9f0d6 100%);
+      } /* 11:00 */
+      .sky-1 {
+        background: linear-gradient(180deg, #6cbded 0%, #f3e6c3 100%);
+      } /* 11:10 */
+      .sky-2 {
+        background: linear-gradient(180deg, #50abeb 0%, #e8dbb0 100%);
+      } /* 11:30 */
+      .sky-3 {
+        background: linear-gradient(180deg, #4facfe 0%, #87ceeb 100%);
+      } /* 13:00 */
+      .sky-4 {
+        background: linear-gradient(180deg, #fa709a 0%, #fee140 100%);
+      } /* 16:00 (노을 시작) */
+      .sky-5 {
+        background: linear-gradient(180deg, #f25b6a 0%, #ff7043 100%);
+      } /* 18:00 (노을 절정) */
+      .sky-6 {
+        background: linear-gradient(180deg, #141e30 0%, #2a3c54 100%);
+      } /* 20:00 (밤) */
+      .sky-7 {
+        background: linear-gradient(180deg, #090e17 0%, #111a26 100%);
+      } /* 23:00 (깊은 밤) */
+
+      /* ==========================================
+         Layer 2: 환경 요소 (태양, 달, 건물 실루엣)
+      ========================================== */
+      .layer-2-environment {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .celestial-body {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        transition: all 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+
+      .sun {
+        background: #fff3db;
+        box-shadow: 0 0 30px #ffc107;
+        top: 30%;
+        left: 10%;
+      }
+
+      .moon {
+        background: #f4f6f0;
+        box-shadow: 0 0 20px #e0e0e0;
+        top: 100%; /* 초기엔 아래 숨김 */
+        left: 50%;
+        opacity: 0;
+      }
+
+      /* 별 효과 */
+      .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          radial-gradient(1.5px 1.5px at 10% 20%, #fff, rgba(0, 0, 0, 0)),
+          radial-gradient(1.5px 1.5px at 30% 40%, #eee, rgba(0, 0, 0, 0)),
+          radial-gradient(2px 2px at 60% 10%, #fff, rgba(0, 0, 0, 0)),
+          radial-gradient(1px 1px at 80% 50%, #ddd, rgba(0, 0, 0, 0));
+        background-repeat: repeat;
+        background-size: 150px 150px;
+        opacity: 0;
+        transition: opacity 1.5s ease;
+      }
+
+      /* 도시 실루엣 */
+      .cityscape {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 120px;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.5));
+        display: flex;
+        align-items: flex-end;
+      }
+      .building {
+        flex: 1;
+        background: rgba(30, 30, 30, 0.6);
+        transition: background-color 1s ease;
+      }
+
+      /* ==========================================
+         Layer 3: UI (메모지 & 타임라인)
+      ========================================== */
+      .layer-3-ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* ============ 수정된 메모지 디자인: 그리드 시스템 적용 ============ */
+      .memo-board {
+        width: 85%;
+        max-width: 420px;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        padding: 2rem;
+        position: relative;
+        margin-bottom: 3rem;
+
+        /* 그리드 패턴을 메모지 배경에 적용 */
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 20px 20px; /* 작고 촘촘한 그리드 */
+      }
+
+      /* 그리드 위에 텍스트가 잘 보이도록 배경 오버레이 */
+      .memo-content {
+        position: relative;
+        padding: 0.5rem;
+        transition: opacity 0.3s ease;
+      }
+
+      .memo-time-category {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .memo-time {
+        font-size: 1.1rem;
+        font-family: var(--font-display);
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .memo-category {
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+        color: var(--ink-soft);
+        text-transform: uppercase;
+      }
+
+      .memo-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--ink);
+        margin-bottom: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .memo-desc {
+        font-size: 1rem;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      /* 타임라인 바 */
+      .timeline-controller {
+        position: absolute;
+        bottom: 30px;
+        width: 90%;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.4);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .time-dot {
+        width: 14px;
+        height: 14px;
+        background: var(--bg);
+        border: 2px solid var(--line-strong);
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .time-dot::after {
+        content: attr(data-time);
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        color: var(--bg);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.158);
+        opacity: 0.5;
+        transition: opacity 0.3s;
+      }
+
+      .time-dot:hover {
+        transform: scale(1.3);
+      }
+
+      .time-dot.active {
+        background: var(--ink-soft);
+        border-color: #f9f8f8;
+        transform: scale(1.5);
+        box-shadow: 0 0 8px rgba(211, 84, 0, 0.6);
+      }
+
+      .time-dot.active::after {
+        opacity: 1;
+        font-weight: bold;
+      }
+
+      /* ==========================================
+         상태별 해/달 애니메이션 제어 (8단계)
+      ========================================== */
+      .panorama-container.state-0 .sun {
+        top: 30%;
+        left: 10%;
+      }
+      .panorama-container.state-1 .sun {
+        top: 25%;
+        left: 20%;
+      }
+      .panorama-container.state-2 .sun {
+        top: 15%;
+        left: 35%;
+      }
+      .panorama-container.state-3 .sun {
+        top: 10%;
+        left: 50%;
+        transform: scale(1.1);
+      }
+      .panorama-container.state-4 .sun {
+        top: 25%;
+        left: 70%;
+        background: #ffca28;
+      }
+
+      .panorama-container.state-5 .sun {
+        top: 60%;
+        left: 85%;
+        background: #ff7043;
+        box-shadow: 0 0 30px #d84315;
+      }
+      .panorama-container.state-5 .building {
+        background: rgba(10, 10, 10, 0.8);
+      }
+
+      .panorama-container.state-6 .sun {
+        top: 100%;
+        opacity: 0;
+      }
+      .panorama-container.state-6 .moon {
+        top: 20%;
+        left: 20%;
+        opacity: 1;
+      }
+      .panorama-container.state-6 .stars {
+        opacity: 0.8;
+      }
+      .panorama-container.state-6 .building {
+        background: rgba(5, 5, 5, 0.9);
+      }
+
+      .panorama-container.state-7 .sun {
+        top: 100%;
+        opacity: 0;
+      }
+      .panorama-container.state-7 .moon {
+        top: 10%;
+        left: 40%;
+        opacity: 1;
+      }
+      .panorama-container.state-7 .stars {
+        opacity: 1;
+      }
+      .panorama-container.state-7 .building {
+        background: #000;
       }
     </style>
   </head>
@@ -169,67 +413,34 @@
 
         <hr class="divider" />
 
-        <main class="timeline-container">
-          <section class="timeline-block">
-            <header class="timeline-header">
-              <h2>MORNING</h2>
-              <span class="sub-label">/ 늦은 아침</span>
-            </header>
-            <ul class="timeline-list">
-              <li class="timeline-item">
-                <time class="timeline-time">11:00</time>
-                <div class="timeline-desc">알림 소리로 일어난 늦은 아침</div>
-              </li>
-              <li class="timeline-item">
-                <time class="timeline-time">11:10</time>
-                <div class="timeline-desc">물 한 잔과 음악 감상</div>
-              </li>
-              <li class="timeline-item">
-                <time class="timeline-time">11:30</time>
-                <div class="timeline-desc">여유 있게 아침 겸 점심 즐기기</div>
-              </li>
-            </ul>
-          </section>
+        <!-- 수정한 Main 영역 (Interactive Panorama) -->
+        <main>
+          <div class="panorama-container state-0" id="panoramaWrapper">
+            <!-- Layer 1: 하늘 -->
+            <div class="layer-1-sky" id="skyPanorama"></div>
 
-          <section class="timeline-block">
-            <header class="timeline-header">
-              <h2>AFTERNOON</h2>
-              <span class="sub-label">/ 오후 활동</span>
-            </header>
-            <ul class="timeline-list">
-              <li class="timeline-item">
-                <time class="timeline-time">13:00</time>
-                <div class="timeline-desc">
-                  <span class="highlight">나만의 사이트 개발하기</span>
+            <!-- Layer 2: 환경 -->
+            <div class="layer-2-environment">
+              <div class="stars"></div>
+              <div class="sun"></div>
+              <div class="moon"></div>
+              <!-- 빌딩이 동적으로 생성될 컨테이너 -->
+              <div class="cityscape" id="cityscape"></div>
+            </div>
+
+            <!-- Layer 3: UI -->
+            <div class="layer-3-ui">
+              <div class="memo-board">
+                <div class="memo-content" id="memoContent">
+                  <!-- JS로 주입 -->
                 </div>
-              </li>
-              <li class="timeline-item">
-                <time class="timeline-time">16:00</time>
-                <div class="timeline-desc">아이쇼핑하기</div>
-              </li>
-            </ul>
-          </section>
+              </div>
 
-          <section class="timeline-block">
-            <header class="timeline-header">
-              <h2>EVENING & NIGHT</h2>
-              <span class="sub-label">/ 저녁과 밤</span>
-            </header>
-            <ul class="timeline-list">
-              <li class="timeline-item">
-                <time class="timeline-time">18:00</time>
-                <div class="timeline-desc">맛있는 저녁 먹기</div>
-              </li>
-              <li class="timeline-item">
-                <time class="timeline-time">20:00</time>
-                <div class="timeline-desc">요즘 인기 있는 영화 감상</div>
-              </li>
-              <li class="timeline-item">
-                <time class="timeline-time">23:00</time>
-                <div class="timeline-desc">짧은 독서 후 취침</div>
-              </li>
-            </ul>
-          </section>
+              <div class="timeline-controller" id="timelineDots">
+                <!-- JS로 8개의 점 주입 -->
+              </div>
+            </div>
+          </div>
 
           <div class="meta-info">휴일 버전 업데이트: 2026년 7월 15일</div>
         </main>
@@ -237,5 +448,7 @@
         <site-footer></site-footer>
       </div>
     </div>
+    <!-- 스크립트 파일 연결 -->
+    <script src="/script/holiday.js" defer></script>
   </body>
 </html>
