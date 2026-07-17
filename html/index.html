@@ -14,6 +14,130 @@
       rel="stylesheet"
     />
     <link href="/css/style.css" rel="stylesheet" />
+    <style>
+      /* ============================================
+         MINI GAME SECTION (자바스크립트 챌린지)
+         기존 style.css의 디자인 토큰(--bg, --ink, --ink-soft,
+         --line, --accent, --font-mono, --font-display)을 그대로 사용합니다.
+      ============================================ */
+
+      .mini-game {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .mini-game-desc {
+        margin-top: 0.75rem;
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .mini-game-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 1.25rem;
+      }
+
+      .btn-game {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.1rem;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--bg);
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .btn-game:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg);
+      }
+
+      .btn-game:active {
+        transform: translateY(1px);
+      }
+
+      .btn-game:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* ============================================
+         WEATHER WIDGET (실시간 세계 날씨)
+      ============================================ */
+
+      .weather-widget {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .city-select {
+        margin-top: 0.75rem;
+        width: 100%;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        cursor: pointer;
+      }
+
+      .city-select:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .weather-box {
+        margin-top: 1rem;
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--line-strong);
+        background: var(--surface-soft, var(--bg));
+      }
+
+      .weather-box-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.875rem;
+        margin: 0 0 0.6rem;
+      }
+
+      .weather-box-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+      }
+
+      .weather-loading {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: var(--ink-faint);
+      }
+
+      .weather-error {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: var(--accent);
+      }
+    </style>
   </head>
   <body>
     <div class="page">
@@ -97,6 +221,44 @@
                 </span>
               </li>
             </ul>
+
+            <!-- 실시간 세계 날씨 (DOM/이벤트) -->
+            <section class="weather-widget">
+              <span class="eyebrow">WEATHER</span>
+              <h2 class="panel-title">실시간 세계 날씨</h2>
+              <select id="citySelect" class="city-select">
+                <option value="seoul">대한민국 서울 KR</option>
+                <option value="tokyo">일본 도쿄 JP</option>
+                <option value="paris" selected>프랑스 파리 FR</option>
+                <option value="newyork">미국 뉴욕 US</option>
+                <option value="london">영국 런던 GB</option>
+              </select>
+
+              <div id="weather-box" class="weather-box">
+                <!-- realtimeInfo.js가 change 이벤트마다 innerHTML로 채웁니다 -->
+              </div>
+            </section>
+
+            <!-- 자바스크립트 챌린지: 업다운 게임 / 성적 계산기 / 내 가방 보기 -->
+            <section class="mini-game">
+              <span class="eyebrow">CHALLENGE</span>
+              <h2 class="panel-title">자바스크립트 챌린지</h2>
+              <p class="mini-game-desc">
+                간단한 자바스크립트 실습 기능 두 가지를 넣어봤어요. 버튼을 눌러
+                직접 실행해보세요.
+              </p>
+              <div class="mini-game-buttons">
+                <button type="button" id="updownStartBtn" class="btn-game">
+                  업다운 게임 시작
+                </button>
+                <button type="button" id="gradeStartBtn" class="btn-game">
+                  성적 계산기 시작
+                </button>
+                <button type="button" id="bagStartBtn" class="btn-game">
+                  내 가방 보기
+                </button>
+              </div>
+            </section>
           </aside>
         </div>
 
@@ -167,5 +329,14 @@
       // Initial Position Setup
       setTransform(false);
     </script>
+
+    <!-- Up-Down 숫자 맞추기 게임 -->
+    <script src="/script/upDown.js"></script>
+    <!-- 성적 계산기 -->
+    <script src="/script/grade.js"></script>
+    <!-- 내 가방 보기 -->
+    <script src="/script/bag.js"></script>
+    <!-- 실시간 세계 날씨 (모듈 분리: weatherAPI.js(데이터 패칭) + realtimeInfo.js(UI 제작)) -->
+    <script type="module" src="/script/realtimeInfo.js"></script>
   </body>
 </html>
