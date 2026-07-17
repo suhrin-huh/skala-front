@@ -169,7 +169,6 @@ nav a.active {
 }
 
 .hero-desc {
-  max-width: 34rem;
   font-size: 0.875rem;
   line-height: 1.7;
   color: var(--ink-soft);
