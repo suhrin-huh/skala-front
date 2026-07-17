@@ -99,6 +99,19 @@ customElements.define(
     connectedCallback() {
       this.innerHTML = `
         <section class="panel">
+          <button
+            type="button"
+            class="travel-video-btn"
+            id="travelVideoBtn"
+            aria-label="여행 영상 보기"
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"
+              />
+            </svg>
+          </button>
+
           <section class="panel-section">
             <div class="panel-header">
               <h2 class="panel-title">TRAVEL ALBUM</h2>
@@ -135,10 +148,53 @@ customElements.define(
               </button>
             </div>
           </section>
+
+          <div class="travel-video-modal" id="travelVideoModal">
+            <div class="travel-video-modal-inner">
+              <button
+                type="button"
+                class="travel-video-modal-close"
+                id="travelVideoCloseBtn"
+                aria-label="영상 닫기"
+              >
+                ✕
+              </button>
+              <video id="travelVideoPlayer" controls>
+                <source src="/media/video.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
         </section>
       `;
 
       this.initCarousel();
+      this.initVideoModal();
+    }
+
+    initVideoModal() {
+      const videoBtn = this.querySelector("#travelVideoBtn");
+      const modal = this.querySelector("#travelVideoModal");
+      const closeBtn = this.querySelector("#travelVideoCloseBtn");
+      const video = this.querySelector("#travelVideoPlayer");
+
+      function openModal() {
+        modal.classList.add("open");
+        video.play();
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+        video.pause();
+        video.currentTime = 0;
+      }
+
+      videoBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      // 모달 바깥(반투명 배경) 클릭 시에도 닫힘
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
     }
 
     initCarousel() {
