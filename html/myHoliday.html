@@ -1,40 +1,292 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Holiday</title>
-</head>
-<body>
-    <nav>
-        <a href="index.html"><strong>메인페이지로 이동하기</strong></a>
-    </nav>
-    <header>
-        <h1>🌈 나의 휴일 일과</h1>
-    </header>
-        <br>
-    <section>
-        <h2>🛌 <u>늦은 아침</u></h2>
-        <p><strong>11:00</strong> - ⏰ 알림 소리로 일어난 늦은 아침</p>
-        <p><strong>11:10</strong> - ⏰ <strong>물 한 잔</strong>과 음악 감상 🎵</p>
-        <p><strong>11:30</strong> - 🍳 여유 있게 아침 겸 점심 즐기기</p>
-    </section>
-    <br>
-    <section>
-        <h2>🚶 <u>오후 활동</u></h2>
-        <p><strong>13:00</strong> - 💻  <strong><mark>나만의 사이트 개발</mark>하기</strong></p>
-        <p><strong>16:00</strong> - 👀 🛍️ 아이쇼핑하기</p>
-    </section>
-    <br>
-    <section>
-        <h2>🌙 <u>저녁과 밤</u></h2>
-        <p><strong>18:00</strong> - 🍽️ 맛있는 저녁먹기</p>
-        <p><strong>20:00</strong> - 🎬 요즘 인기있는 영화 감상</p>
-        <p><strong>23:00</strong> - 📖 짧은 독서 후 취침🥰 </p>
-    </section>
-    <br>
-    <footer>
-        <p>📅 휴일 버전 작성일: 2026년 7월 15일</p>
-    </footer>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MY HOLIDAY</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+      /* ============ HOLIDAY PAGE EXCLUSIVE STYLES ============ */
+      .hero {
+        padding: 3.5rem 0 2rem;
+      }
+
+      .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      /* 섹션 간 구분선 */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--line-strong);
+        margin: 3rem 0;
+      }
+
+      /* ============ TIMELINE LOG STYLES ============ */
+      .timeline-container {
+        max-width: 48rem;
+        margin-bottom: 4rem;
+      }
+
+      /* 각 시간대별 블록 */
+      .timeline-block {
+        margin-bottom: 3rem;
+      }
+
+      .timeline-block:last-child {
+        margin-bottom: 0;
+      }
+
+      /* 타임라인 섹션 헤더 (ex. LATE MORNING) */
+      .timeline-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .timeline-header h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: 0.05em;
+        color: var(--ink);
+      }
+
+      .timeline-header .sub-label {
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+        font-weight: normal;
+      }
+
+      /* 타임라인 축 및 리스트 */
+      .timeline-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-left: 1px solid var(--line-strong);
+        padding-left: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      /* 개별 일정 아이템 */
+      .timeline-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 4rem 1fr;
+        gap: 1rem;
+        align-items: baseline;
+        transition: transform 0.2s ease;
+      }
+
+      @media (min-width: 32rem) {
+        .timeline-item {
+          grid-template-columns: 5rem 1fr;
+          gap: 2rem;
+        }
+      }
+
+      /* 타임라인 노드 (왼쪽 선에 붙는 네모/원 점) */
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -1.82rem; /* 선 굵기와 패딩에 맞춘 정밀 보정 */
+        top: 0.35rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        transition:
+          background-color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      /* 타임라인 시간 */
+      .timeline-time {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--ink-soft);
+        letter-spacing: 0.05em;
+      }
+
+      /* 타임라인 내용 */
+      .timeline-desc {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--ink);
+        line-height: 1.6;
+      }
+
+      /* 호버 인터랙션 */
+      .timeline-item:hover {
+        transform: translateX(4px);
+      }
+
+      .timeline-item:hover::before {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .timeline-item:hover .timeline-time {
+        color: var(--accent);
+      }
+
+      /* 기존 <mark> 태그를 대체하는 커스텀 하이라이트 스타일 */
+      .highlight {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 0.2rem 0.5rem;
+        font-weight: bold;
+        border-radius: 2px;
+      }
+
+      /* 휴일 버전 작성일 등 메타 정보 (푸터 상단) */
+      .meta-info {
+        font-size: 0.75rem;
+        color: var(--ink-faint);
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px dashed var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <header class="topbar">
+          <div class="brand">
+            <span>SKALA</span>
+            <span>FRONT</span>
+          </div>
+          <nav>
+            <a href="myProfile.html">소개</a>
+            <a href="myClass.html">시간표</a>
+            <a
+              href="myHoliday.html"
+              style="
+                border-bottom: 1px solid var(--accent);
+                color: var(--accent);
+              "
+              >휴일계획</a
+            >
+            <a href="myTrip.html">여행앨범</a>
+            <a href="signUp.html">회원가입</a>
+          </nav>
+          <div class="utility">MINCHAE HWANG</div>
+        </header>
+
+        <section class="hero">
+          <span class="eyebrow">DAY OFF</span>
+          <h1 class="title">나의 휴일 일과</h1>
+          <p>
+            여유로운 늦잠부터 나만의 사이트 개발까지, 온전히 나를 위해 채우는
+            휴일의 타임라인입니다.
+          </p>
+        </section>
+
+        <hr class="divider" />
+
+        <main class="timeline-container">
+          <section class="timeline-block">
+            <header class="timeline-header">
+              <h2>MORNING</h2>
+              <span class="sub-label">/ 늦은 아침</span>
+            </header>
+            <ul class="timeline-list">
+              <li class="timeline-item">
+                <time class="timeline-time">11:00</time>
+                <div class="timeline-desc">알림 소리로 일어난 늦은 아침</div>
+              </li>
+              <li class="timeline-item">
+                <time class="timeline-time">11:10</time>
+                <div class="timeline-desc">물 한 잔과 음악 감상</div>
+              </li>
+              <li class="timeline-item">
+                <time class="timeline-time">11:30</time>
+                <div class="timeline-desc">여유 있게 아침 겸 점심 즐기기</div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="timeline-block">
+            <header class="timeline-header">
+              <h2>AFTERNOON</h2>
+              <span class="sub-label">/ 오후 활동</span>
+            </header>
+            <ul class="timeline-list">
+              <li class="timeline-item">
+                <time class="timeline-time">13:00</time>
+                <div class="timeline-desc">
+                  <span class="highlight">나만의 사이트 개발하기</span>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <time class="timeline-time">16:00</time>
+                <div class="timeline-desc">아이쇼핑하기</div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="timeline-block">
+            <header class="timeline-header">
+              <h2>EVENING & NIGHT</h2>
+              <span class="sub-label">/ 저녁과 밤</span>
+            </header>
+            <ul class="timeline-list">
+              <li class="timeline-item">
+                <time class="timeline-time">18:00</time>
+                <div class="timeline-desc">맛있는 저녁 먹기</div>
+              </li>
+              <li class="timeline-item">
+                <time class="timeline-time">20:00</time>
+                <div class="timeline-desc">요즘 인기 있는 영화 감상</div>
+              </li>
+              <li class="timeline-item">
+                <time class="timeline-time">23:00</time>
+                <div class="timeline-desc">짧은 독서 후 취침</div>
+              </li>
+            </ul>
+          </section>
+
+          <div class="meta-info">휴일 버전 업데이트: 2026년 7월 15일</div>
+        </main>
+
+        <footer class="page-footer">
+          <p>이메일 문의: medit74@sk.com</p>
+          <p>
+            © 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서
+            작성되었습니다.
+          </p>
+        </footer>
+      </div>
+    </div>
+  </body>
 </html>
