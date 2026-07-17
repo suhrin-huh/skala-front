@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TRIP</title>
+    <!-- 폰트 관련 자원 -->
     <link
       href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
       rel="stylesheet"
@@ -13,22 +14,15 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-
+    <!-- 전역 스타일 -->
     <link rel="stylesheet" href="/css/style.css" />
+    <!-- 커스텀 웹 컴포넌트 -->
     <script src="/script/components.js" defer></script>
+    <script src="/script/travelAlbum.js" type="module"></script>
+    <script src="/script/musicPlayer.js" type="module"></script>
 
     <style>
       /* ============ TRIP PAGE EXCLUSIVE STYLES ============ */
-
-      /* section-subtitle 기본값(style.css)보다 살짝 크고 자간이 넓은 페이지 전용 오버라이드 */
-      .section-subtitle {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1.25rem;
-        color: var(--ink);
-        margin-bottom: 1.5rem;
-        letter-spacing: 0.05em;
-      }
 
       /* ============ 1. CD PLAYER SIDEBAR & HOVER TRIGGER ============ */
       /* 호버 감지 영역을 플로팅 원형 버튼 크기로 제한 */
@@ -307,84 +301,220 @@
         font-weight: bold;
       }
 
-      /* ============ SCROLL DRIVEN GALLERY CARD ============ */
+      /* ============ TRAVEL ALBUM CAROUSEL (앞/뒤 뒤집는 카드) ============ */
+      :root {
+        --trip-card-h: 30rem;
+        --trip-gap: 1.25rem;
+      }
+
+      @media (max-width: 26rem) {
+        :root {
+          --trip-card-h: 14rem;
+        }
+      }
+
       .travel-section-container {
         width: 100%;
       }
 
-      .scroll-container {
+      .trip-carousel {
         width: 100%;
+        min-width: 30rem;
+        height: var(--trip-card-h);
         display: flex;
-        flex-direction: column;
-        gap: 8rem;
-        padding: 2rem 0;
-      }
-
-      .card-row-wrapper {
-        width: 100%;
-        display: flex;
+        align-items: center;
         justify-content: center;
-        animation: revealOnScroll ease both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 40%;
+        gap: 0.85rem;
+        padding: 1.5rem 0 2.5rem;
       }
 
-      @keyframes revealOnScroll {
-        from {
-          opacity: 0;
-          transform: translateY(80px) scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      .gallery-card {
-        width: 100%;
-        max-width: 36rem;
+      .trip-arrow {
+        flex: 0 0 auto;
+        width: 2.25rem;
+        height: 2.25rem;
         background: var(--bg);
-        border: 1px solid var(--line-strong);
-        padding: 1.5rem;
+        color: var(--ink);
+        padding: 0;
         display: flex;
-        flex-direction: column;
-        transition: all 0.25s ease;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.15s ease;
       }
 
-      .gallery-card .img-container {
-        width: 100%;
-        aspect-ratio: 16 / 10;
+      .trip-arrow:hover {
+        transform: scale(1.2);
+        color: brown;
+      }
+
+      .trip-arrow:active {
+        transform: scale(0.9);
+      }
+
+      .trip-arrow svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .trip-carousel-viewport {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
         overflow: hidden;
-        border: 1px solid var(--line);
-        background: #e6dfcf;
       }
 
-      .gallery-card img {
+      .trip-track {
+        display: flex;
+        gap: var(--trip-gap);
+        height: 100%;
+        will-change: transform;
+      }
+
+      .trip-slide {
+        flex: 0 0 calc(100% / 1.5);
+        height: 100%;
+      }
+
+      /* 카드 앞/뒤 회전을 담당하는 3D 무대 */
+      .trip-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        perspective: 1600px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .trip-card:not(.is-flipped):hover {
+        transform: scale(1.05);
+        z-index: 10;
+      }
+
+      .trip-card-inner {
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.45, 0, 0.2, 1);
+      }
+
+      .trip-card.is-flipped .trip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .trip-card-face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        border: 1px solid var(--line-strong);
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      /* ----- 앞면 : 6:4 이미지 + 중앙 라벨 ----- */
+      .trip-card-front img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.4s ease;
+        display: block;
       }
 
-      .gallery-card figcaption {
-        margin-top: 1.25rem;
-        font-size: 0.9rem;
-        font-weight: bold;
+      .trip-label {
+        position: absolute;
+        top: 1rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.4rem 0.9rem;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--bg);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      /* ----- 뒷면 : 줄 있는 엽서 ----- */
+      .trip-card-back {
+        transform: rotateY(180deg);
+        padding: 1.4rem 1.1rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg);
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 1.55rem,
+          var(--line) 1.55rem,
+          var(--line) calc(1.55rem + 1px)
+        );
+      }
+
+      .trip-card-back-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.55rem;
+        width: 1.3rem;
+        height: 1.3rem;
+        padding: 0;
+        border: none;
+        background: none;
+        color: var(--ink-soft);
+        font-size: 0.85rem;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .trip-card-back-close:hover {
         color: var(--ink);
-        text-align: center;
-        transition: color 0.2s ease;
       }
 
-      .gallery-card:hover {
-        border-color: var(--accent);
+      .trip-card-back-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        line-height: 1.55rem;
+        margin: 0;
       }
 
-      .gallery-card:hover img {
-        transform: scale(1.03);
+      .trip-card-back-date {
+        font-size: 0.7rem;
+        color: var(--ink-faint);
+        line-height: 1.55rem;
+        margin: 0;
       }
 
-      .gallery-card:hover figcaption {
-        color: var(--accent);
+      .trip-card-back-episode {
+        margin-top: 0;
+        font-size: 0.8125rem;
+        color: var(--ink-soft);
+        line-height: 1.55rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+      }
+
+      .trip-card-back-stamp {
+        position: absolute;
+        right: 0.9rem;
+        bottom: 0.8rem;
+        width: 2.4rem;
+        height: 2.4rem;
+        border: 1px solid var(--line-strong);
+        background-image: radial-gradient(
+          var(--ink-faint) 1px,
+          transparent 1.3px
+        );
+        background-size: 6px 6px;
+        opacity: 0.75;
       }
     </style>
   </head>
@@ -397,49 +527,16 @@
           <span class="eyebrow">TRAVEL LOG</span>
           <h1 class="hero-title">MY TRIP</h1>
           <p class="hero-desc">
-            시간이 멈춘 듯한 공간, 기억하고 싶은 여행의 기록들을 담은 멀티미디어
-            아카이브입니다. 우측 CD 아이콘 영역에 마우스를 올려 음악을 켜보세요.
+            기억하고 싶은 여행의 기록들을 담은 아카이브입니다. 우측 아이콘을
+            통해 음악을 함께 즐겨보세요.
           </p>
         </section>
-
         <hr class="divider" />
-
         <main>
           <section class="travel-section-container">
-            <h2 class="section-subtitle">TRAVEL ALBUM</h2>
-
-            <audio id="bgm-player" loop>
-              <source src="/media/audio.mp3" type="audio/mpeg" />
-            </audio>
-
-            <div class="scroll-container">
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/bali.jpg" alt="발리 자연 경관" />
-                  </div>
-                  <figcaption>발리</figcaption>
-                </figure>
-              </div>
-
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/greece.jpeg" alt="그리스 산토리니" />
-                  </div>
-                  <figcaption>그리스</figcaption>
-                </figure>
-              </div>
-
-              <div class="card-row-wrapper">
-                <figure class="gallery-card">
-                  <div class="img-container">
-                    <img src="../media/osaka.webp" alt="오사카 도톤보리" />
-                  </div>
-                  <figcaption>오사카</figcaption>
-                </figure>
-              </div>
-            </div>
+            <travel-album></travel-album>
+            <hr class="divider" />
+            <!-- 비디오 추가 부분 -->
           </section>
         </main>
 
@@ -447,185 +544,6 @@
       </div>
     </div>
 
-    <div class="sidebar-trigger-zone" id="sidebar-trigger-area">
-      <div class="cd-floating-btn" id="floating-btn">
-        <svg
-          class="player-icon icon-stop-state"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12v7c0 1.1.9 2 2 2h4v-8H4v-1c0-4.41 3.59-8 8-8s8 3.59 8 8v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-5.52-4.48-10-10-10z"
-          />
-        </svg>
-        <svg
-          class="player-icon icon-play-state"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <linearGradient
-              id="eq-flow-gradient"
-              gradientUnits="userSpaceOnUse"
-              x1="-24"
-              y1="0"
-              x2="0"
-              y2="0"
-              spreadMethod="reflect"
-            >
-              <stop offset="0%" stop-color="#b6503a">
-                <animate
-                  attributeName="stop-color"
-                  values="#b6503a; #d98c4a; #8a3324; #b6503a"
-                  dur="4s"
-                  repeatCount="indefinite"
-                />
-              </stop>
-              <stop offset="100%" stop-color="#d98c4a">
-                <animate
-                  attributeName="stop-color"
-                  values="#d98c4a; #8a3324; #b6503a; #d98c4a"
-                  dur="4s"
-                  repeatCount="indefinite"
-                />
-              </stop>
-              <animate
-                attributeName="x1"
-                values="-24; 24; -24"
-                dur="3s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="x2"
-                values="0; 48; 0"
-                dur="3s"
-                repeatCount="indefinite"
-              />
-            </linearGradient>
-          </defs>
-          <rect x="4" y="10" width="3" height="4" transform="translate(0 0)">
-            <animate
-              attributeName="height"
-              values="4; 16; 4"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="10; 4; 10"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="10" y="6" width="3" height="12">
-            <animate
-              attributeName="height"
-              values="12; 20; 12"
-              dur="0.8s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="6; 2; 6"
-              dur="0.8s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="16" y="10" width="3" height="4">
-            <animate
-              attributeName="height"
-              values="4; 14; 4"
-              dur="0.5s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="y"
-              values="10; 5; 10"
-              dur="0.5s"
-              repeatCount="indefinite"
-            />
-          </rect>
-        </svg>
-      </div>
-    </div>
-
-    <aside class="cd-sidebar" id="music-sidebar">
-      <div class="cd-player">
-        <div class="cd-well">
-          <div class="cd-disc" id="cd-disc-media">
-            <div class="cd-center"></div>
-          </div>
-        </div>
-
-        <div
-          class="pull-string-container"
-          id="pull-trigger"
-          aria-label="줄을 당겨 플레이어 제어"
-        >
-          <div class="string-line"></div>
-          <div class="string-handle"></div>
-        </div>
-      </div>
-
-      <p class="cd-title-guide">
-        하단의 줄을 잡고 아래로 세게 당겼다 놓으면<br />CD 플레이어가 전자기
-        탄성과 함께 작동합니다.
-      </p>
-    </aside>
-
-    <script>
-      const bgmPlayer = document.getElementById("bgm-player");
-
-      const sidebar = document.getElementById("music-sidebar");
-      const floatingBtn = document.getElementById("floating-btn");
-
-      const pullTrigger = document.getElementById("pull-trigger");
-      const cdDiscMedia = document.getElementById("cd-disc-media");
-
-      let isPlaying = false;
-
-      // 1. 호버 인터랙션 (열기 / 닫기)
-      // 플로팅 원형 버튼 위에 마우스가 올라가면 사이드바 열림
-      floatingBtn.addEventListener("mouseenter", () => {
-        sidebar.classList.add("open");
-        floatingBtn.classList.add("active");
-      });
-
-      // 사이드바 자체에 마우스가 들어왔을 때도 열려있는 상태 유지 보조
-      sidebar.addEventListener("mouseenter", () => {
-        sidebar.classList.add("open");
-        floatingBtn.classList.add("active");
-      });
-
-      // 마우스가 사이드바 영역 밖으로 완전히 벗어나면 자동으로 닫힘
-      sidebar.addEventListener("mouseleave", () => {
-        sidebar.classList.remove("open");
-        floatingBtn.classList.remove("active");
-      });
-
-      // 2. CD 플레이어 줄당기기 탄성 물리 인터랙션
-      pullTrigger.addEventListener("click", () => {
-        // 탄성 진동 애니메이션 개시
-        pullTrigger.classList.add("pulling");
-
-        // 750ms(탄성 진동 주기) 이후 애니메이션 클래스 원상태 복귀
-        setTimeout(() => {
-          pullTrigger.classList.remove("pulling");
-        }, 750);
-
-        // 오디오 재생/정지 및 아이콘 상태 동기화
-        if (!isPlaying) {
-          bgmPlayer.play();
-          cdDiscMedia.style.animationPlayState = "running";
-          floatingBtn.classList.add("playing"); // 헤드셋 -> 파장 SVG 전환
-          isPlaying = true;
-        } else {
-          bgmPlayer.pause();
-          cdDiscMedia.style.animationPlayState = "paused";
-          floatingBtn.classList.remove("playing"); // 파장 -> 헤드셋 SVG 전환
-          isPlaying = false;
-        }
-      });
-    </script>
+    <music-player></music-player>
   </body>
 </html>
