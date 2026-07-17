@@ -36,8 +36,8 @@ customElements.define(
       const note = this.getAttribute("note");
       this.innerHTML = `
         <footer class="page-footer">
-          <p>이메일 문의: medit74@sk.com</p>
-          <p>© 2026 강병호 포트폴리오. 모든 내용은 학습 목적 사이트에서 작성되었습니다.</p>
+          <p>이메일 문의: minchaeh217@gmail.com</p>
+          <p>© 2026 황민채 포트폴리오. 모든 내용은 학습 목적을 위해 작성되었습니다.</p>
           ${note ? `<p>${note}</p>` : ""}
         </footer>`;
     }
