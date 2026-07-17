@@ -20,19 +20,6 @@
          MINI GAME SECTION
       ============================================ */
 
-      .mini-game {
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--line);
-      }
-
-      .mini-game-desc {
-        margin-top: 0.75rem;
-        font-size: 0.8125rem;
-        color: var(--ink-soft);
-        line-height: 1.6;
-      }
-
       .mini-game-list {
         display: flex;
         align-items: flex-start;
@@ -104,12 +91,6 @@
         overflow: visible;
       }
 
-      .world-map-desc {
-        margin-top: 0.75rem;
-        font-size: 0.8125rem;
-        color: var(--ink-soft);
-        line-height: 1.6;
-      }
       .world-map-illustration {
         position: absolute;
         inset: 0;
@@ -281,12 +262,16 @@
           </section>
 
           <!-- SIDE : 실시간 정보 등 -->
-          <aside class="panel updates">
+          <aside class="panel panel-stack">
             <!-- 실시간 세계 날씨 (지도 + 핀 + 모달) -->
-            <section class="weather-widget">
-              <span class="eyebrow">WEATHER</span>
-              <h2 class="panel-title">실시간 세계 날씨</h2>
-              <p>핀을 클릭해 나라별 날씨 정보를 확인해보세요.</p>
+            <section class="panel-section">
+              <div class="panel-header">
+                <span class="eyebrow">WEATHER</span>
+                <h2 class="panel-title">실시간 세계 날씨</h2>
+                <p class="panel-desc">
+                  핀을 클릭해 나라별 날씨 정보를 확인해보세요.
+                </p>
+              </div>
               <div
                 class="world-map"
                 id="worldMap"
@@ -302,10 +287,12 @@
             </section>
 
             <!-- 자바스크립트 챌린지: 업다운 게임 / 성적 계산기 / 내 가방 보기 -->
-            <section class="mini-game">
-              <span class="eyebrow">CHALLENGE</span>
-              <h2 class="panel-title">MINI GAMES</h2>
-              <p class="mini-game-desc">간단한 미니 게임을 즐겨보세요.</p>
+            <section class="panel-section">
+              <div class="panel-header">
+                <span class="eyebrow">CHALLENGE</span>
+                <h2 class="panel-title">MINI GAMES</h2>
+                <p class="panel-desc">간단한 미니 게임을 즐겨보세요.</p>
+              </div>
               <div
                 class="mini-game-list"
                 id="miniGameList"

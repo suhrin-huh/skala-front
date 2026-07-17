@@ -1,7 +1,7 @@
 /* ============ DESIGN TOKENS ============ */
 :root {
   --bg: #f5f1e8;
-  --ink: #1c1a17;
+  --ink: #3b2e11;
   --ink-soft: #6f6a5e;
   --ink-faint: #a29c8c;
 
@@ -147,6 +147,9 @@ nav a.active {
 
 /* ============ HERO ============ */
 .hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   padding: 3.5rem 0 2rem;
 }
 
@@ -155,7 +158,6 @@ nav a.active {
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   color: var(--ink-soft);
-  margin-bottom: 0.75rem;
 }
 
 .hero-title {
@@ -168,7 +170,6 @@ nav a.active {
 }
 
 .hero-desc {
-  margin-top: 1rem;
   max-width: 34rem;
   font-size: 0.875rem;
   line-height: 1.7;
@@ -213,7 +214,29 @@ nav a.active {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.25rem;
-  margin-top: 0.5rem;
+}
+
+.panel-desc {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.panel-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 /* ============ FEATURED / CAROUSEL ============ */
