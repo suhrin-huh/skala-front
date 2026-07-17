@@ -132,8 +132,7 @@ customElements.define(
           </div>
 
           <p class="cd-title-guide">
-            하단의 줄을 잡고 아래로 세게 당겼다 놓으면<br />CD 플레이어가 전자기
-            탄성과 함께 작동합니다.
+            하단의 줄을 당기면<br />CD 플레이어가 작동합니다.
           </p>
         </aside>
       `;
