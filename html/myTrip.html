@@ -28,8 +28,8 @@
       /* 호버 감지 영역을 플로팅 원형 버튼 크기로 제한 */
       .sidebar-trigger-zone {
         position: fixed;
-        right: 1.5rem;
-        top: 50%;
+        right: 0.5rem;
+        top: 25%;
         transform: translateY(-50%);
         width: 6rem;
         height: 6rem;
@@ -39,8 +39,8 @@
 
       /* 우측 플로팅 원형 버튼 (이벤트 트리거 전용) */
       .cd-floating-btn {
-        width: 6rem;
-        height: 6rem;
+        width: 4rem;
+        height: 4rem;
         border-radius: 50%;
         background: var(--bg);
         border: 2px solid var(--accent);
@@ -53,10 +53,22 @@
           transform 0.2s ease,
           background-color 0.2s ease,
           border-color 0.2s ease;
+        animation: floatBounce 2.2s ease-in-out infinite;
+      }
+
+      @keyframes floatBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-0.4rem);
+        }
       }
 
       .cd-floating-btn:hover,
       .cd-floating-btn.active {
+        animation-play-state: paused;
         transform: scale(1.1);
         background: var(--accent-soft);
         border-color: var(--accent);
@@ -64,8 +76,8 @@
 
       /* 헤드셋 & 이퀄라이저 SVG 아이콘 스타일 */
       .player-icon {
-        width: 3rem;
-        height: 3rem;
+        width: 2rem;
+        height: 2rem;
         fill: var(--ink);
         transition: fill 0.2s ease;
       }
@@ -315,6 +327,7 @@
 
       .travel-section-container {
         width: 100%;
+        min-width: 25rem;
       }
 
       /* 트래블 앨범 영상 버튼 & 모달 (panel 내부 기준 절대 위치) */
@@ -728,8 +741,8 @@
             기억하고 싶은 여행의 기록들을 담은 아카이브입니다.
           </p>
           <p class="hero-desc">
-            <span class="highlight">우측 헤드셋 아이콘을 클릭</span>해 음악을
-            함께 즐겨보세요.
+            <span class="highlight">우측 헤드셋 아이콘</span>으로 플레이어를
+            재생해 음악을 함께 즐겨보세요.
           </p>
         </section>
         <hr class="divider" />
