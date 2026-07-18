@@ -1,5 +1,5 @@
 const NAV_ITEMS = [
-  { key: "myProfile", href: "myProfile.html", label: "INTRODUCE" },
+  { key: "myProfile", href: "myProfile.html", label: "PROFILE" },
   { key: "myClass", href: "myClass.html", label: "CLASS" },
   { key: "myHoliday", href: "myHoliday.html", label: "HOLIDAY" },
   { key: "myTrip", href: "myTrip.html", label: "TRIP" },
