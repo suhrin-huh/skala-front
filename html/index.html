@@ -225,9 +225,10 @@
       }
 
       .game-round {
-        font-size: 0.75rem;
+        font-size: 1.2rem;
+        font-weight: 800;
         letter-spacing: 0.1em;
-        color: var(--ink-soft);
+        color: var(--accent);
         text-transform: uppercase;
       }
 
@@ -256,13 +257,13 @@
       }
 
       .game-input {
-        width: 8rem;
-        padding: 0.4rem 0.1rem;
+        width: 6rem;
+        padding: 0.3rem 0.1rem;
         border: none;
         border-bottom: 1.5px solid var(--line-strong);
         background: transparent;
         font-family: var(--font-mono);
-        font-size: 1.5rem;
+        font-size: 1.05rem;
         text-align: center;
         color: var(--ink);
         outline: none;
@@ -293,11 +294,11 @@
         margin-top: 0.9rem;
       }
 
-      /* ---- 결과 화면 : stamp 스타일 ---- */
-      .modal-box--game.is-stamp {
+      /* ---- 결과 화면 : stamp 스타일 (game / grade 등 모든 모달에서 재사용) ---- */
+      .modal-box.is-stamp {
         border-color: transparent;
       }
-      .modal-box--game.is-stamp::after {
+      .modal-box.is-stamp::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -332,6 +333,184 @@
         letter-spacing: 0.04em;
         color: var(--accent);
         transform: rotate(-8deg);
+      }
+
+      /* ---- Grade Calculator 전용 ---- */
+      .modal-box--grade {
+        max-width: 26rem;
+        min-height: 24rem;
+        padding: 2.25rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .grade-form {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.6rem;
+        width: 100%;
+      }
+
+      .grade-input-subject {
+        flex: 1 1 auto;
+        width: auto;
+        text-align: left;
+      }
+
+      .grade-input-score {
+        width: 4rem;
+      }
+
+      .grade-add-btn {
+        flex: 0 0 auto;
+        width: 2.1rem;
+        height: 2.1rem;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .grade-add-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .grade-add-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+      }
+
+      .grade-table {
+        width: 100%;
+        max-height: 9.5rem;
+        overflow-y: auto;
+      }
+
+      .grade-table-empty {
+        padding: 1.1rem 0;
+        text-align: center;
+        font-size: 0.8125rem;
+        color: var(--ink-faint);
+      }
+
+      .grade-row {
+        display: grid;
+        grid-template-columns: 1fr 3.5rem 1.4rem;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0;
+        border-top: 1px solid var(--line);
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        text-align: left;
+      }
+      .grade-row:first-child {
+        border-top: none;
+      }
+      .grade-row-subject {
+        color: var(--ink);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .grade-row-score {
+        color: var(--accent);
+        font-weight: bold;
+        text-align: right;
+      }
+      .grade-row-remove {
+        justify-self: end;
+        border: none;
+        background: none;
+        color: var(--ink-faint);
+        font-size: 0.85rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .grade-row-remove:hover {
+        color: var(--accent);
+      }
+
+      .grade-result-list {
+        width: 100%;
+        max-height: 9.5rem;
+        overflow-y: auto;
+        margin: 0.2rem 0;
+      }
+      /* 결과 화면도 입력 화면(.grade-row)과 동일한 표 형식을 재사용,
+         삭제 버튼 컬럼만 없앤 2열 구성 */
+      .grade-row--result {
+        grid-template-columns: 1fr auto;
+      }
+
+      /* ---- What's in my bag? 전용 ---- */
+      .modal-box--bag {
+        max-width: 24rem;
+        min-height: 26rem;
+        padding: 2.25rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* 마우스가 지나간 부분만 원형으로 실제 이미지를 드러내는 탐색 스테이지 */
+      .bag-explore-stage {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        border: 1px solid var(--line-strong);
+        cursor: crosshair;
+        --mx: -20%;
+        --my: -20%;
+      }
+
+      .bag-explore-cover {
+        position: absolute;
+        inset: 0;
+        background-color: var(--bg);
+        background-image: radial-gradient(
+          var(--ink-faint) 1.5px,
+          transparent 1.6px
+        );
+        background-size: 10px 10px;
+      }
+
+      .bag-explore-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        -webkit-mask-image: radial-gradient(
+          circle 100px at var(--mx) var(--my),
+          #000 0%,
+          #000 55%,
+          transparent 100%
+        );
+        mask-image: radial-gradient(
+          circle 100px at var(--mx) var(--my),
+          #000 0%,
+          #000 55%,
+          transparent 100%
+        );
+      }
+
+      .bag-question-target {
+        color: var(--accent);
+        font-weight: bold;
+      }
+
+      .stamp-seal.is-fail {
+        border-color: var(--ink-faint);
+        color: var(--ink-faint);
       }
     </style>
   </head>
@@ -532,6 +711,209 @@
                   type="button"
                   class="modal-btn modal-btn--primary"
                   id="updownRestartBtn"
+                >
+                  다시하기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade Calculator 모달 -->
+        <div class="modal-backdrop" id="gradeModal">
+          <div
+            class="modal-box modal-box--grade"
+            id="gradeModalBox"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Grade Calculator"
+          >
+            <button class="modal-close" id="gradeCloseBtn" aria-label="닫기">
+              ×
+            </button>
+
+            <!-- Screen 1: 인트로 -->
+            <div class="game-screen active" data-screen="intro">
+              <h2 class="game-title">Grade Calculator</h2>
+              <img
+                src="/media/calculator-thumnail.png"
+                alt=""
+                class="game-thumb"
+              />
+              <p class="game-desc">
+                과목과 점수를 입력하면<br />
+                평균 점수를 계산해드려요.
+              </p>
+              <button
+                type="button"
+                class="modal-btn modal-btn--primary"
+                id="gradeStartInnerBtn"
+              >
+                START
+              </button>
+            </div>
+
+            <!-- Screen 2: 입력 -->
+            <div class="game-screen" data-screen="input">
+              <div class="grade-table" id="gradeTable">
+                <p class="grade-table-empty" id="gradeTableEmpty">
+                  아직 추가된 과목이 없어요.
+                </p>
+              </div>
+              <div class="grade-form">
+                <input
+                  type="text"
+                  class="game-input grade-input-subject"
+                  id="gradeSubjectInput"
+                  placeholder="과목"
+                  aria-label="과목 입력"
+                />
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  class="game-input grade-input-score"
+                  id="gradeScoreInput"
+                  placeholder="점수"
+                  aria-label="점수 입력"
+                />
+                <button
+                  type="button"
+                  class="grade-add-btn"
+                  id="gradeAddBtn"
+                  aria-label="과목 추가"
+                  disabled
+                >
+                  +
+                </button>
+              </div>
+              <p class="game-error" id="gradeError"></p>
+
+              <button
+                type="button"
+                class="modal-btn modal-btn--primary"
+                id="gradeCalcBtn"
+                disabled
+              >
+                점수 계산하기
+              </button>
+            </div>
+
+            <!-- Screen 3: 결과 (stamp) -->
+            <div class="game-screen" data-screen="result">
+              <div class="stamp-seal">RESULT</div>
+              <div class="grade-result-list" id="gradeResultList"></div>
+              <p class="game-desc" style="margin-bottom: 0">평균 점수</p>
+              <p class="game-result-count" id="gradeAverage">0</p>
+              <div class="game-actions">
+                <button
+                  type="button"
+                  class="modal-btn modal-btn--ghost"
+                  id="gradeCloseResultBtn"
+                >
+                  닫기
+                </button>
+                <button
+                  type="button"
+                  class="modal-btn modal-btn--primary"
+                  id="gradeRestartBtn"
+                >
+                  다시하기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- What's in my bag? 모달 -->
+        <div class="modal-backdrop" id="bagModal">
+          <div
+            class="modal-box modal-box--bag"
+            id="bagModalBox"
+            role="dialog"
+            aria-modal="true"
+            aria-label="What's in my bag?"
+          >
+            <button class="modal-close" id="bagCloseBtn" aria-label="닫기">
+              ×
+            </button>
+
+            <!-- Screen 1: 인트로 -->
+            <div class="game-screen active" data-screen="intro">
+              <h2 class="game-title">What's in my bag?</h2>
+              <img src="/media/bag-thumnail.png" alt="" class="game-thumb" />
+              <p class="game-desc">
+                마우스로 가방 속을 탐색해보세요.<br />
+                시간이 지나면 물건 개수를 맞히는 문제가 나와요.
+              </p>
+              <button
+                type="button"
+                class="modal-btn modal-btn--primary"
+                id="bagStartInnerBtn"
+              >
+                START
+              </button>
+            </div>
+
+            <!-- Screen 2: 탐색 -->
+            <div class="game-screen" data-screen="explore">
+              <span class="game-round" id="bagTimer">5초 남음</span>
+              <div class="bag-explore-stage" id="bagStage">
+                <div class="bag-explore-cover"></div>
+                <img
+                  src="/media/bag-inner.jpg"
+                  alt="가방 속"
+                  class="bag-explore-image"
+                  id="bagImage"
+                />
+              </div>
+              <p class="game-desc" style="margin: 0">
+                마우스를 움직여 가방 속을 탐색해보세요.
+              </p>
+            </div>
+
+            <!-- Screen 3: 질문 -->
+            <div class="game-screen" data-screen="question">
+              <span class="game-round">QUESTION</span>
+              <p class="game-desc" id="bagQuestionText">
+                물건은 몇 개 있을까요?
+              </p>
+              <input
+                type="text"
+                inputmode="numeric"
+                class="game-input"
+                id="bagAnswerInput"
+                placeholder="?"
+                aria-label="정답 개수 입력"
+              />
+              <p class="game-error" id="bagError"></p>
+              <button
+                type="button"
+                class="modal-btn modal-btn--primary"
+                id="bagSubmitBtn"
+                disabled
+              >
+                제출하기
+              </button>
+            </div>
+
+            <!-- Screen 4: 결과 (stamp) -->
+            <div class="game-screen" data-screen="result">
+              <div class="stamp-seal" id="bagResultStamp">SUCCESS</div>
+              <p class="game-desc" id="bagResultMessage">정답입니다!</p>
+              <p class="game-desc" style="margin-bottom: 0">정답</p>
+              <p class="game-result-count" id="bagResultAnswer">0개</p>
+              <div class="game-actions">
+                <button
+                  type="button"
+                  class="modal-btn modal-btn--ghost"
+                  id="bagCloseResultBtn"
+                >
+                  닫기
+                </button>
+                <button
+                  type="button"
+                  class="modal-btn modal-btn--primary"
+                  id="bagRestartBtn"
                 >
                   다시하기
                 </button>
