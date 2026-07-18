@@ -43,3 +43,21 @@ customElements.define(
     }
   },
 );
+
+// URL 해시(#id)로 진입했을 때 스크롤뿐 아니라 키보드 포커스도 함께 옮긴다.
+document.addEventListener("DOMContentLoaded", () => {
+  if (!location.hash) return;
+
+  let target;
+  try {
+    target = document.querySelector(location.hash);
+  } catch {
+    return;
+  }
+  if (!target) return;
+
+  if (!target.hasAttribute("tabindex")) {
+    target.setAttribute("tabindex", "-1");
+  }
+  target.focus();
+});

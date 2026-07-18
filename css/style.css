@@ -198,10 +198,30 @@ nav a.active {
   margin-bottom: 3rem;
 }
 
-@media (min-width: 56rem) {
+@media (min-width: 48rem) {
   .home-content {
     grid-template-columns: 3fr 1.4fr;
   }
+}
+
+/* NEWS + GUESTBOOK을 세로로 쌓는 왼쪽 컬럼.
+   48rem 이상에서는 grid의 기본 stretch로 aside와 높이가 자동으로 맞춰지고,
+   그 안에서 guestbook-panel이 flex: 1로 남는 공간을 채운다. */
+.home-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.home-main news-carousel {
+  flex: 0 0 auto;
+}
+
+.home-main guestbook-panel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 16rem;
 }
 
 .panel {
@@ -329,6 +349,49 @@ nav a.active {
 .carousel-dot.active {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+/* ============ GUESTBOOK ============ */
+.guestbook-panel-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.guestbook-list {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.guestbook-entry {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.guestbook-entry:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.guestbook-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+
+.guestbook-message {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
 }
 
 /* ============ INFO LIST ============ */

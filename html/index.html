@@ -15,6 +15,8 @@
     />
     <link href="/css/style.css" rel="stylesheet" />
     <script src="/script/components.js" defer></script>
+    <script src="/script/newsCarousel.js" type="module"></script>
+    <script src="/script/guestbook.js" type="module"></script>
     <style>
       /* ============================================
          MINI GAME SECTION
@@ -530,39 +532,13 @@
         <hr class="divider" />
         <!-- 콘텐츠 -->
         <div class="home-content">
-          <!-- NEWS -->
-          <section class="panel featured">
-            <div class="featured-texture" aria-hidden="true"></div>
-            <span class="eyebrow">NEWS</span>
-            <div class="carousel">
-              <div class="carousel-viewport">
-                <div class="carousel-track" id="track">
-                  <article class="carousel-slide">
-                    <div class="carousel-card">
-                      <span class="date">2026.06.11</span>
-                      <h3>여행 앨범 업데이트</h3>
-                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
-                    </div>
-                  </article>
-                  <article class="carousel-slide">
-                    <div class="carousel-card">
-                      <span class="date">2026.06.11</span>
-                      <h3>여행 앨범 업데이트</h3>
-                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
-                    </div>
-                  </article>
-                  <article class="carousel-slide">
-                    <div class="carousel-card">
-                      <span class="date">2026.06.11</span>
-                      <h3>여행 앨범 업데이트</h3>
-                      <p>홋카이도 대설산 브이로그 영상을 추가했어요.</p>
-                    </div>
-                  </article>
-                </div>
-              </div>
-              <div class="carousel-dots" id="dots"></div>
-            </div>
-          </section>
+          <div class="home-main">
+            <!-- NEWS -->
+            <news-carousel></news-carousel>
+
+            <!-- GUESTBOOK -->
+            <guestbook-panel></guestbook-panel>
+          </div>
 
           <!-- SIDE : 실시간 정보 등 -->
           <aside class="panel">
@@ -926,63 +902,6 @@
       </div>
     </div>
 
-    <script>
-      const track = document.getElementById("track");
-      const dotsEl = document.getElementById("dots");
-
-      const realSlides = Array.from(track.children);
-      const total = realSlides.length;
-
-      // Infinite Loop Clones
-      const firstClone = realSlides[0].cloneNode(true);
-      const lastClone = realSlides[total - 1].cloneNode(true);
-
-      track.insertBefore(lastClone, realSlides[0]);
-      track.appendChild(firstClone);
-
-      let index = 1;
-
-      function setTransform(withTransition = true) {
-        track.style.transition = withTransition
-          ? "transform 0.4s ease"
-          : "none";
-        track.style.transform = `translateX(-${index * 100}%)`;
-      }
-
-      function updateDots() {
-        const realIndex = (index - 1 + total) % total;
-        [...dotsEl.children].forEach((dot, i) => {
-          dot.classList.toggle("active", i === realIndex);
-        });
-      }
-
-      // Generate Navigation Dots
-      realSlides.forEach((_, i) => {
-        const dot = document.createElement("button");
-        dot.className = "carousel-dot" + (i === 0 ? " active" : "");
-        dot.setAttribute("aria-label", `${i + 1}번째 소식으로 이동`);
-        dot.addEventListener("click", () => {
-          index = i + 1;
-          setTransform();
-          updateDots();
-        });
-        dotsEl.appendChild(dot);
-      });
-
-      // Loop Shift Reset on Transition End
-      track.addEventListener("transitionend", () => {
-        if (index === total + 1) {
-          index = 1;
-          setTransform(false);
-        } else if (index === 0) {
-          index = total;
-          setTransform(false);
-        }
-      });
-
-      // Initial Position Setup
-      setTransform(false);
-    </script>
     <!-- Up-Down 숫자 맞추기 게임 -->
     <script src="/script/upDown.js"></script>
     <!-- 성적 계산기 -->
