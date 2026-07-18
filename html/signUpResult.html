@@ -15,6 +15,80 @@
     />
     <link rel="stylesheet" href="/css/style.css" />
     <script src="/script/components.js" defer></script>
+
+    <style>
+      /* ============ SIGNUP PAGE EXCLUSIVE STYLES ============ */
+      .page-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+
+      /* ---- 안내 사항 리스트 ---- */
+      .notice-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+      .notice-list li {
+        position: relative;
+        padding-left: 1.4rem;
+        font-family: var(--font-mono);
+        font-size: 0.9375rem;
+        color: var(--ink-soft);
+        line-height: 1.7;
+      }
+      .notice-list li::before {
+        content: "□";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* ---- 이동 링크 리스트 ---- */
+      .nav-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+      }
+      .nav-list li {
+        border-top: 1px solid var(--line);
+      }
+      .nav-list li:first-child {
+        border-top: none;
+      }
+      .nav-list a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0.1rem;
+        font-family: var(--font-mono);
+        font-size: 1.125rem;
+        color: var(--ink);
+        transition:
+          color 0.2s,
+          padding-left 0.2s;
+      }
+      .nav-list a::after {
+        content: "→";
+        color: var(--ink-faint);
+        transition:
+          transform 0.2s,
+          color 0.2s;
+      }
+      .nav-list a:hover {
+        color: var(--accent);
+        padding-left: 0.4rem;
+      }
+      .nav-list a:hover::after {
+        color: var(--accent);
+        transform: translateX(4px);
+      }
+    </style>
   </head>
   <body>
     <div class="page">
@@ -23,16 +97,22 @@
 
         <section class="hero">
           <span class="eyebrow">COMPLETE</span>
-          <h1 class="hero-title">REGISTRAION COMPLETE</h1>
-          <p class="hero-desc"></p>
+          <h1 class="hero-title">REGISTRATION COMPLETE</h1>
+          <p class="hero-desc">
+            가입해주셔서 감사합니다. 아래 안내 사항을 확인하고,
+            <span class="highlight">준비된 페이지들</span>을 둘러보세요.
+          </p>
         </section>
 
         <hr class="divider" />
 
-        <main>
-          <section>
-            <h2 class="section-subtitle">안내 사항</h2>
-            <ul>
+        <main class="page-stack">
+          <section class="panel">
+            <div class="panel-header">
+              <span class="eyebrow">GUIDE</span>
+              <h2 class="panel-title">안내 사항</h2>
+            </div>
+            <ul class="notice-list">
               <li>입력하신 이메일 주소로 가입 확인 메일이 발송되었습니다.</li>
               <li>
                 보안을 위해 첫 로그인 후 비밀번호를 다시 한번 확인해 주세요.
@@ -43,17 +123,29 @@
               </li>
             </ul>
           </section>
-          <hr class="divider" />
-          <section>
-            <h2 class="section-subtitle">이동하기</h2>
-            <p>
-              아래 링크를 클릭하면 이전에 작성한 다른 페이지로 이동할 수
-              있습니다.
+
+          <section class="panel">
+            <div class="panel-header">
+              <span class="eyebrow">NAVIGATE</span>
+              <h2 class="panel-title">이동하기</h2>
+            </div>
+            <p class="panel-desc">
+              아래 링크를 클릭하고 다양한 페이지를 구경해보세요.
             </p>
-            <ul>
-              <li><a href="myProfile.html">👤 나의 프로필 보기</a></li>
-              <li><a href="myClass.html">🗓️ 나의 수업 시간표 보기</a></li>
-              <li><a href="myHoliday.html">🌈 나의 휴일 계획 보기</a></li>
+            <ul class="nav-list">
+              <li>
+                <a href="myProfile.html"
+                  >PROFILE - '황민채'는 어떤 사람인가요?</a
+                >
+              </li>
+              <li>
+                <a href="myClass.html">CLASS - 강의시간표를 확인해보세요.</a>
+              </li>
+              <li>
+                <a href="myHoliday.html"
+                  >HOLIDAY - 주말 일정을 시간대별로 확인해보세요.</a
+                >
+              </li>
             </ul>
           </section>
         </main>
