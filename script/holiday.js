@@ -58,13 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const memoContent = document.getElementById("memoContent");
 
   // 2. 동적 빌딩 생성
-  const buildingCount = 20;
+  const buildingCount = 40;
   for (let i = 0; i < buildingCount; i++) {
     const building = document.createElement("div");
     building.className = "building";
     const randomHeight = Math.floor(Math.random() * 60) + 20;
     building.style.height = `${randomHeight}%`;
-    if (i !== buildingCount - 1) building.style.marginRight = "4px";
+    if (i !== buildingCount - 1)
+      building.style.marginRight = Math.floor(Math.random() * 10) + 2;
     cityscape.appendChild(building);
   }
 
