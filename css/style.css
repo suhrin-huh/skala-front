@@ -147,6 +147,26 @@ nav a.active {
   color: var(--ink-soft);
 }
 
+.utility-auth {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.utility-auth:hover {
+  color: var(--accent);
+}
+
+.utility-auth:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* ============ HERO ============ */
 .hero {
   display: flex;
@@ -358,6 +378,19 @@ nav a.active {
   flex-direction: column;
 }
 
+.guestbook-panel-header {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.guestbook-panel-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .guestbook-list {
   list-style: none;
   margin: 1.25rem 0 0;
@@ -366,7 +399,21 @@ nav a.active {
   flex-direction: column;
   gap: 1rem;
   flex: 1 1 auto;
+  max-height: 20rem;
   overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.guestbook-list::-webkit-scrollbar {
+  display: none;
+}
+
+.guestbook-status {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 1rem 0;
 }
 
 .guestbook-entry {
@@ -392,6 +439,19 @@ nav a.active {
   font-size: 0.875rem;
   line-height: 1.6;
   color: var(--ink-soft);
+}
+
+.guestbook-date {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  margin-top: 0.35rem;
+}
+
+.guestbook-write-textarea {
+  text-align: left;
+  resize: vertical;
+  min-height: 6rem;
 }
 
 /* ============ INFO LIST ============ */
@@ -566,6 +626,17 @@ nav a.active {
   margin: 0;
   font-size: 0.75rem;
   color: var(--accent);
+}
+
+.form-error-message {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-align: center;
+}
+
+.form-error-message[hidden] {
+  display: none;
 }
 
 /* ============================================
@@ -1043,10 +1114,7 @@ nav a.active {
   position: absolute;
   inset: 0;
   background-color: var(--bg);
-  background-image: radial-gradient(
-    var(--ink-faint) 1.5px,
-    transparent 1.6px
-  );
+  background-image: radial-gradient(var(--ink-faint) 1.5px, transparent 1.6px);
   background-size: 10px 10px;
 }
 
@@ -2014,7 +2082,10 @@ nav a.active {
   transform: translateY(-50%);
   width: 10px;
   height: 60px;
-  background-image: radial-gradient(var(--line-strong) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    var(--line-strong) 1.5px,
+    transparent 1.5px
+  );
   background-size: 5px 6px;
 }
 .cd-player::before {
@@ -2801,9 +2872,38 @@ nav a.active {
   flex: 1; /* 리셋 버튼은 영역을 적게 차지하도록 설정 */
 }
 
+.btn-small {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.75rem;
+  flex: none;
+  white-space: nowrap;
+}
+
 .signup-form-container {
   display: flex;
   justify-content: center;
+}
+
+/* ---- LOGIN PAGE (signUp.html의 form-container 시스템 재사용) ---- */
+.login-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.login-signup-hint {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.login-signup-hint a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
 }
 
 /* ---- SIGNUP COMPLETE MODAL (stamp) ---- */
@@ -2835,6 +2935,12 @@ nav a.active {
 
 .modal-actions {
   margin-top: 0.5rem;
+}
+
+.modal-actions--confirm {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 /* ============================================

@@ -33,12 +33,7 @@
         </section>
         <hr class="divider" />
         <main class="signup-form-container">
-          <form
-            id="signUpForm"
-            class="form-container"
-            action="signUpResult.html"
-            method="get"
-          >
+          <form id="signUpForm" class="form-container">
             <div class="step-bar">
               <div class="step-item active" id="step1-tab">
                 STEP 1. 계정 정보
@@ -246,6 +241,13 @@
                 </div>
               </fieldset>
 
+              <p
+                class="form-error-message"
+                id="signUpFormError"
+                role="alert"
+                hidden
+              ></p>
+
               <div class="carousel-footer">
                 <button
                   type="button"
@@ -276,7 +278,7 @@
                   id="btn-submit"
                   style="display: none"
                 >
-                  동의하고 회원가입
+                  회원가입
                 </button>
               </div>
             </div>
@@ -315,6 +317,45 @@
               </div>
             </div>
           </div>
+
+          <!-- 다시 작성 확인 모달 -->
+          <div class="modal-backdrop" id="resetConfirmModal">
+            <div
+              class="modal-box modal-box--form"
+              id="resetConfirmBox"
+              role="dialog"
+              aria-modal="true"
+              aria-label="다시 작성 확인"
+            >
+              <button
+                class="modal-close"
+                id="resetConfirmCloseBtn"
+                aria-label="닫기"
+              >
+                ×
+              </button>
+              <h2 class="modal-title">다시 작성하시겠습니까?</h2>
+              <p class="modal-desc">
+                작성 중인 모든 정보가 사라지고 첫 번째 단계로 돌아갑니다.
+              </p>
+              <div class="modal-actions modal-actions--confirm">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-nav"
+                  id="resetConfirmCancelBtn"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary btn-nav"
+                  id="resetConfirmOkBtn"
+                >
+                  다시 작성
+                </button>
+              </div>
+            </div>
+          </div>
         </main>
 
         <site-footer></site-footer>
@@ -330,6 +371,21 @@
       const btnNext = document.getElementById("btn-next");
       const btnSubmit = document.getElementById("btn-submit");
       const btnReset = document.getElementById("btn-reset");
+      const formError = document.getElementById("signUpFormError");
+      const btnSubmitDefaultText = btnSubmit.textContent;
+
+      // 이미 로그인된 상태로 회원가입 페이지에 접근하면 메인으로 돌려보낸다.
+      (async () => {
+        try {
+          const { getCurrentUser } = await import("/supabase/action.js");
+          const user = await getCurrentUser();
+          if (user) {
+            window.location.href = "index.html";
+          }
+        } catch {
+          // Supabase 연동 실패 시에는 회원가입 페이지를 그대로 보여준다.
+        }
+      })();
 
       let currentStep = 1; // 1, 2, 3 단계 관리
       const totalSteps = slides.length;
@@ -391,16 +447,51 @@
         }
       });
 
-      // 리셋 기능 고도화 (전체 초기화 및 1단계 귀환)
+      // 공통 모달 열기/닫기
+      function openModal(modalEl) {
+        modalEl.classList.add("open");
+        requestAnimationFrame(() => {
+          modalEl.classList.add("show");
+        });
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal(modalEl) {
+        modalEl.classList.remove("show");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          modalEl.classList.remove("open");
+        }, 250);
+      }
+
+      // 리셋 기능 고도화 (전체 초기화 및 1단계 귀환) - 확인 모달 경유
+      const resetConfirmModal = document.getElementById("resetConfirmModal");
+      const resetConfirmCloseBtn = document.getElementById(
+        "resetConfirmCloseBtn",
+      );
+      const resetConfirmCancelBtn = document.getElementById(
+        "resetConfirmCancelBtn",
+      );
+      const resetConfirmOkBtn = document.getElementById("resetConfirmOkBtn");
+
       btnReset.addEventListener("click", () => {
-        const confirmReset = confirm(
-          "작성 중인 모든 정보가 사라지고 첫 번째 단계로 돌아갑니다. 진행하시겠습니까? ⚠️",
-        );
-        if (confirmReset) {
-          form.reset();
-          currentStep = 1;
-          updateStepUI();
-        }
+        openModal(resetConfirmModal);
+      });
+
+      resetConfirmCloseBtn.addEventListener("click", () =>
+        closeModal(resetConfirmModal),
+      );
+      resetConfirmCancelBtn.addEventListener("click", () =>
+        closeModal(resetConfirmModal),
+      );
+      resetConfirmModal.addEventListener("click", (e) => {
+        if (e.target === resetConfirmModal) closeModal(resetConfirmModal);
+      });
+      resetConfirmOkBtn.addEventListener("click", () => {
+        form.reset();
+        currentStep = 1;
+        updateStepUI();
+        closeModal(resetConfirmModal);
       });
 
       // 회원가입 완료 모달 제어
@@ -412,41 +503,81 @@
         "signupCompleteConfirmBtn",
       );
 
-      function openCompleteModal() {
-        completeModal.classList.add("open");
-        requestAnimationFrame(() => {
-          completeModal.classList.add("show");
-        });
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeCompleteModal() {
-        completeModal.classList.remove("show");
-        document.body.style.overflow = "";
-        setTimeout(() => {
-          completeModal.classList.remove("open");
-        }, 250);
-      }
-
-      completeCloseBtn.addEventListener("click", closeCompleteModal);
+      completeCloseBtn.addEventListener("click", () =>
+        closeModal(completeModal),
+      );
       completeModal.addEventListener("click", (e) => {
-        if (e.target === completeModal) closeCompleteModal();
+        if (e.target === completeModal) closeModal(completeModal);
       });
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && completeModal.classList.contains("open")) {
-          closeCompleteModal();
+        if (e.key !== "Escape") return;
+        if (completeModal.classList.contains("open")) {
+          closeModal(completeModal);
+        }
+        if (resetConfirmModal.classList.contains("open")) {
+          closeModal(resetConfirmModal);
         }
       });
 
-      // 확인 버튼 -> 원래 폼이 이동하려던 목적지(signUpResult.html)로 실제 이동
+      // 확인 버튼 -> 모달을 닫고 안내 페이지로 이동
       completeConfirmBtn.addEventListener("click", () => {
-        form.submit();
+        closeModal(completeModal);
+        window.location.href = "signUpResult.html";
       });
 
-      // 완료 제출 핸들러 (alert 대신 stamp 모달)
-      form.addEventListener("submit", function (e) {
+      // 폼 에러 메시지 표시/초기화
+      function showFormError(message) {
+        if (!formError) return;
+        formError.textContent = message;
+        formError.hidden = false;
+      }
+
+      function clearFormError() {
+        if (!formError) return;
+        formError.textContent = "";
+        formError.hidden = true;
+      }
+
+      // FormData -> signUp()이 요구하는 형태로 매핑
+      function collectSignUpData() {
+        const fd = new FormData(form);
+        return {
+          userId: (fd.get("userId") || "").trim(),
+          userPw: fd.get("userPw") || "",
+          userEmail: (fd.get("userEmail") || "").trim(),
+          emailDomain: fd.get("emailDomain") || "",
+          userName: (fd.get("userName") || "").trim(),
+          birthDate: fd.get("birthDate") || "",
+          gender: fd.get("gender") || "none",
+          interests: fd.getAll("interest"),
+          joinPath: fd.get("joinPath") || "",
+          introduce: (fd.get("introduce") || "").trim(),
+        };
+      }
+
+      // 완료 제출 핸들러: signUp() 호출 후 성공 시 stamp 모달, 실패 시 에러 메시지
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        openCompleteModal();
+        clearFormError();
+
+        const signUpData = collectSignUpData();
+
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "처리중";
+        try {
+          const { signUp } = await import("/supabase/action.js");
+          const result = await signUp(signUpData);
+          if (result.success) {
+            openModal(completeModal);
+          } else {
+            showFormError("알 수 없는 오류가 발생하였습니다.");
+          }
+        } catch {
+          showFormError("알 수 없는 오류가 발생하였습니다.");
+        } finally {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = btnSubmitDefaultText;
+        }
       });
     </script>
   </body>
