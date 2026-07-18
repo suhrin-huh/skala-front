@@ -246,6 +246,135 @@
         display: flex;
         justify-content: center;
       }
+
+      /* ============ SIGNUP COMPLETE MODAL (stamp) ============ */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 17, 12, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+      .modal-backdrop.open {
+        display: flex;
+      }
+      .modal-backdrop.show {
+        opacity: 1;
+      }
+
+      .modal-box {
+        position: relative;
+        width: 100%;
+        max-width: 22rem;
+        background: var(--bg);
+        border: 1px solid var(--line-strong);
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.9rem;
+        transform: translateY(10px) scale(0.98);
+        opacity: 0;
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+      }
+      .modal-backdrop.show .modal-box {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 1.85rem;
+        height: 1.85rem;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        background: var(--bg);
+        color: var(--ink-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+        z-index: 2;
+      }
+      .modal-close:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* 항공우편 대각선 테두리 프레임 */
+      .modal-box.is-stamp {
+        border-color: transparent;
+      }
+      .modal-box.is-stamp::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--accent) 0 6px,
+            var(--bg) 6px 12px,
+            var(--ink-faint) 12px 18px,
+            var(--bg) 18px 24px
+          )
+          border-box;
+        -webkit-mask:
+          linear-gradient(#fff 0 0) padding-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        border: 5px solid transparent;
+      }
+
+      .stamp-seal {
+        width: 3.6rem;
+        height: 3.6rem;
+        border: 1.5px dashed var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+        color: var(--accent);
+        transform: rotate(-8deg);
+      }
+
+      .modal-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: var(--ink);
+        margin: 0;
+      }
+
+      .modal-desc {
+        font-size: 0.875rem;
+        color: var(--ink-soft);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .modal-actions {
+        margin-top: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -512,6 +641,40 @@
               </div>
             </div>
           </form>
+
+          <!-- 회원가입 완료 모달 (stamp) -->
+          <div class="modal-backdrop" id="signupCompleteModal">
+            <div
+              class="modal-box is-stamp"
+              id="signupCompleteBox"
+              role="dialog"
+              aria-modal="true"
+              aria-label="회원가입 완료"
+            >
+              <button
+                class="modal-close"
+                id="signupCompleteCloseBtn"
+                aria-label="닫기"
+              >
+                ×
+              </button>
+              <div class="stamp-seal">DONE</div>
+              <h2 class="modal-title">회원가입이 완료되었습니다</h2>
+              <p class="modal-desc">환영해요!</p>
+              <p class="modal-desc">
+                아래 버튼을 누르면 안내 페이지로 이동합니다.
+              </p>
+              <div class="modal-actions">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-nav"
+                  id="signupCompleteConfirmBtn"
+                >
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
         </main>
 
         <site-footer></site-footer>
@@ -600,9 +763,50 @@
         }
       });
 
-      // 완료 제출 핸들러
+      // 회원가입 완료 모달 제어
+      const completeModal = document.getElementById("signupCompleteModal");
+      const completeCloseBtn = document.getElementById(
+        "signupCompleteCloseBtn",
+      );
+      const completeConfirmBtn = document.getElementById(
+        "signupCompleteConfirmBtn",
+      );
+
+      function openCompleteModal() {
+        completeModal.classList.add("open");
+        requestAnimationFrame(() => {
+          completeModal.classList.add("show");
+        });
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeCompleteModal() {
+        completeModal.classList.remove("show");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          completeModal.classList.remove("open");
+        }, 250);
+      }
+
+      completeCloseBtn.addEventListener("click", closeCompleteModal);
+      completeModal.addEventListener("click", (e) => {
+        if (e.target === completeModal) closeCompleteModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && completeModal.classList.contains("open")) {
+          closeCompleteModal();
+        }
+      });
+
+      // 확인 버튼 -> 원래 폼이 이동하려던 목적지(signUpResult.html)로 실제 이동
+      completeConfirmBtn.addEventListener("click", () => {
+        form.submit();
+      });
+
+      // 완료 제출 핸들러 (alert 대신 stamp 모달)
       form.addEventListener("submit", function (e) {
-        alert("회원가입이 완료되었습니다! 🎉");
+        e.preventDefault();
+        openCompleteModal();
       });
     </script>
   </body>
