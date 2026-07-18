@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOGIN</title>
+    <link
+      href="https://cdn.jsdelivr.net/gh/webfontworld/neodgm/neodgm.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link href="/css/style.css" rel="stylesheet" />
+    <script src="/script/components.js" defer></script>
+  </head>
+  <body>
+    <div class="page">
+      <div class="inner">
+        <!-- COMMON ELEMENT : HEADER -->
+        <site-header></site-header>
+
+        <!-- 페이지별 소개글 -->
+        <section class="hero">
+          <span class="eyebrow">WELCOME BACK</span>
+          <h1 class="hero-title">LOG IN</h1>
+          <p class="hero-desc">로그인하고 방명록을 남겨보세요.</p>
+        </section>
+        <hr class="divider" />
+        <main class="signup-form-container">
+          <div class="login-panel">
+            <form id="loginForm" class="form-container">
+              <div class="form-carousel">
+                <fieldset class="form-slide active">
+                  <legend>로그인</legend>
+
+                  <div class="form-group">
+                    <label class="form-label" for="userEmail">
+                      이메일
+                      <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <div class="email-group">
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="userEmail"
+                        name="userEmail"
+                        placeholder="example"
+                        required
+                      />
+                      <span>@</span>
+                      <select
+                        class="form-control"
+                        id="emailDomain"
+                        name="emailDomain"
+                      >
+                        <option value="direct">직접 입력</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="naver.com">naver.com</option>
+                        <option value="daum.net">daum.net</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="userPw">
+                      비밀번호
+                      <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      class="form-control"
+                      type="password"
+                      id="userPw"
+                      name="userPw"
+                      placeholder="비밀번호를 입력해 주세요"
+                      minlength="8"
+                      required
+                    />
+                  </div>
+                </fieldset>
+
+                <p
+                  class="form-error-message"
+                  id="loginFormError"
+                  role="alert"
+                  hidden
+                ></p>
+
+                <div class="carousel-footer">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-nav"
+                    id="btn-login-submit"
+                  >
+                    로그인
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <p class="login-signup-hint">
+              아직 계정이 없으신가요?
+              <a href="signUp.html">회원가입 하러 가기</a>
+            </p>
+          </div>
+        </main>
+
+        <site-footer></site-footer>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const formError = document.getElementById("loginFormError");
+      const btnSubmit = document.getElementById("btn-login-submit");
+
+      function showFormError(message) {
+        formError.textContent = message;
+        formError.hidden = false;
+      }
+
+      function clearFormError() {
+        formError.textContent = "";
+        formError.hidden = true;
+      }
+
+      // FormData -> signIn()이 요구하는 형태로 매핑
+      function collectLoginData() {
+        const fd = new FormData(form);
+        return {
+          userEmail: (fd.get("userEmail") || "").trim(),
+          emailDomain: fd.get("emailDomain") || "",
+          userPw: fd.get("userPw") || "",
+        };
+      }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        clearFormError();
+
+        const loginData = collectLoginData();
+
+        btnSubmit.disabled = true;
+        try {
+          const { signIn } = await import("/supabase/action.js");
+          const result = await signIn(loginData);
+          if (result.success) {
+            window.location.href = "index.html";
+          } else {
+            showFormError("알 수 없는 오류가 발생하였습니다.");
+          }
+        } catch {
+          showFormError("알 수 없는 오류가 발생하였습니다.");
+        } finally {
+          btnSubmit.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
