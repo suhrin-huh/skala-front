@@ -116,7 +116,7 @@ customElements.define(
             <div class="panel-header">
               <h2 class="panel-title">TRAVEL ALBUM</h2>
               <p class="panel-desc">
-                  여행지의 추억을 담은 앨범입니다. 그림을 클릭하면 여행지에서의 소소한 에피소드를 구경할 수 있습니다.
+                  여행지의 추억을 담은 앨범입니다. <span class="highlight">카드를 클릭</span>하면 여행지에서의 소소한 에피소드를 구경할 수 있습니다.
                 </p>
             </div>
 
