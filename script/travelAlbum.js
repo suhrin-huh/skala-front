@@ -9,7 +9,7 @@ const TRIPS = [
     label: "Japan - Osaka",
     episode:
       "늦가을의 선선한 바람이 불던 오사카의 밤. 도톤보리 밤거리는 화려한 네온사인과 활기로 가득했다. 출출해질 때쯤 어디선가 풍겨오는 고소한 다코야키 냄새를 따라 발걸음을 옮겼다. 호호 불며 먹은 뜨거운 다코야키 한 입에 깊어가는 가을 밤의 낭만이 입안 가득 퍼지는 듯했다.",
-    image: "/media/japan-osaka.png",
+    image: "/media/japan-osaka.jpg",
     date: "2025-11-20",
   },
   {
@@ -18,7 +18,7 @@ const TRIPS = [
     label: "Japan - Kyoto",
     episode:
       "겨울의 초입, 서리가 내릴 듯 차가운 새벽 안개가 자욱했던 교토. 아라시야마의 대나무 숲을 찾아 혼자 조용히 걸었다. 바람에 사각거리는 대나무 소리 외에는 아무런 소음도 들리지 않는 고요함 속에서, 복잡했던 마음이 차분하게 정리되며 맑아지는 것을 느꼈다.",
-    image: "/media/japan-kyoto.png",
+    image: "/media/japan-kyoto.jpg",
     date: "2024-12-03",
   },
   {
@@ -27,7 +27,7 @@ const TRIPS = [
     label: "Greece - Santorini",
     episode:
       "여름의 열기가 조금은 차분해진 9월 초 가을의 산토리니. 하얀 벽과 파란 지붕이 내려다보이는 골목길 모퉁이 카페에 자리를 잡았다. 끝없이 펼쳐진 푸른 에메랄드빛 바다를 바라보며 마신 따뜻한 커피 한 잔은 바쁜 일상 속에서 느껴보지 못한 최고의 여유와 평온을 선물해주었다.",
-    image: "/media/greece-santorini.png",
+    image: "/media/greece-santorini.jpg",
     date: "2025-09-05",
   },
   {
